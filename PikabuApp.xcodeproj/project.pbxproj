@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		97B49C3C9161BCC2252E3B6B /* Pods_PikabuApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18C096965E9921D1B30ED5B3 /* Pods_PikabuApp.framework */; };
 		D4937DF82577B6A30073971B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4937DF72577B6A30073971B /* AppDelegate.swift */; };
 		D4937DFA2577B6A30073971B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4937DF92577B6A30073971B /* SceneDelegate.swift */; };
 		D4937DFC2577B6A30073971B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4937DFB2577B6A30073971B /* ViewController.swift */; };
@@ -16,6 +17,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		18C096965E9921D1B30ED5B3 /* Pods_PikabuApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PikabuApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8E6B1673D954E49B5D57C513 /* Pods-PikabuApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PikabuApp.release.xcconfig"; path = "Target Support Files/Pods-PikabuApp/Pods-PikabuApp.release.xcconfig"; sourceTree = "<group>"; };
 		D4937DF42577B6A30073971B /* PikabuApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PikabuApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4937DF72577B6A30073971B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D4937DF92577B6A30073971B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -24,6 +27,7 @@
 		D4937E002577B6A40073971B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D4937E032577B6A40073971B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D4937E052577B6A40073971B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E5EC0E72B5B57639528B7497 /* Pods-PikabuApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PikabuApp.debug.xcconfig"; path = "Target Support Files/Pods-PikabuApp/Pods-PikabuApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,17 +35,38 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				97B49C3C9161BCC2252E3B6B /* Pods_PikabuApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		334BA4EFE3C4DB6CD8E523E4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				18C096965E9921D1B30ED5B3 /* Pods_PikabuApp.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A130480E12670E775DE4F88D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E5EC0E72B5B57639528B7497 /* Pods-PikabuApp.debug.xcconfig */,
+				8E6B1673D954E49B5D57C513 /* Pods-PikabuApp.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		D4937DEB2577B6A30073971B = {
 			isa = PBXGroup;
 			children = (
 				D4937DF62577B6A30073971B /* PikabuApp */,
 				D4937DF52577B6A30073971B /* Products */,
+				A130480E12670E775DE4F88D /* Pods */,
+				334BA4EFE3C4DB6CD8E523E4 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -74,9 +99,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D4937E082577B6A40073971B /* Build configuration list for PBXNativeTarget "PikabuApp" */;
 			buildPhases = (
+				64642E48B2B5E4F034A7FF62 /* [CP] Check Pods Manifest.lock */,
 				D4937DF02577B6A30073971B /* Sources */,
 				D4937DF12577B6A30073971B /* Frameworks */,
 				D4937DF22577B6A30073971B /* Resources */,
+				532859A34042136009E78BB2 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -132,6 +159,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		532859A34042136009E78BB2 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PikabuApp/Pods-PikabuApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PikabuApp/Pods-PikabuApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PikabuApp/Pods-PikabuApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		64642E48B2B5E4F034A7FF62 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-PikabuApp-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D4937DF02577B6A30073971B /* Sources */ = {
@@ -282,6 +351,7 @@
 		};
 		D4937E092577B6A40073971B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E5EC0E72B5B57639528B7497 /* Pods-PikabuApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -301,6 +371,7 @@
 		};
 		D4937E0A2577B6A40073971B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8E6B1673D954E49B5D57C513 /* Pods-PikabuApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
