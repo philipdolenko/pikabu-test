@@ -103,7 +103,6 @@
 				D4937E2D257872FD0073971B /* Common */,
 				D4937E21257862A90073971B /* Application */,
 				D4937E2A25786F380073971B /* Services */,
-				D4937E23257862BE0073971B /* PostScreen */,
 				D4937E22257862B60073971B /* FeedScreen */,
 				D4937E0B2577C5790073971B /* Model */,
 				D4937E202578618B0073971B /* Resources */,
@@ -155,13 +154,6 @@
 				D4937E24257865AA0073971B /* View */,
 			);
 			path = FeedScreen;
-			sourceTree = "<group>";
-		};
-		D4937E23257862BE0073971B /* PostScreen */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = PostScreen;
 			sourceTree = "<group>";
 		};
 		D4937E24257865AA0073971B /* View */ = {

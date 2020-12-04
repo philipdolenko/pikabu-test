@@ -37,7 +37,7 @@ public class FeedCell: BaseCell, UICollectionViewDataSource, UICollectionViewDel
             make.edges.equalToSuperview()
         }
 
-        collectionView.isScrollEnabled = false
+        
         collectionView.backgroundColor = .white
         collectionView.register(PostCell.self, forCellWithReuseIdentifier: PostCell.identifier)
         
