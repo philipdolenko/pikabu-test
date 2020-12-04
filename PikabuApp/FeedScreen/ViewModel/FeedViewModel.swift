@@ -38,10 +38,6 @@ public class FeedViewModel {
         }
     }
     
-    func selectPostAt() {
-        
-    }
-    
     func viewDidLoad() {
         savedPosts.value = LocalStorageService.shared.getAllSavedPosts()
         

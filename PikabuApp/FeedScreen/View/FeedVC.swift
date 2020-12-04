@@ -10,12 +10,34 @@ import UIKit
 
 class FeedVC: UIViewController {
     
-    private enum Section: String, CaseIterable {
-        case feed = "Лента"
-        case saved = "Сохраненные"
+    private struct Section {
+        let type: SectionType
+        let posts: () -> [Post]
     }
     
-    let cellId = "cellId"
+    private enum SectionType: String {
+        case feed = "Лента"
+        case savedFeed = "Сохраненные"
+    }
+    
+    private var viewModel = FeedViewModel()
+    
+    private lazy var sections: [Section] = {
+        [
+            .init(
+                type: .feed,
+                posts: { [unowned self] in
+                    self.viewModel.posts.value
+                }
+            ),
+            .init(
+                type: .savedFeed,
+                posts: { [unowned self] in
+                    self.viewModel.savedPosts.value
+                }
+            )
+        ]
+    }()
     
     weak var topBar: TopBar!
     weak var collectionView: UICollectionView!
@@ -23,17 +45,35 @@ class FeedVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpView()
+        viewModel.viewDidLoad()
         configureCollectionView()
+        subscribeToViewModelChanges()
         topBar.configure(
-            tabsNames: Section.allCases.map({$0.rawValue}),
+            tabsNames: sections.map({$0.type.rawValue}),
             listener: self
         )
     }
     
+    
+    private func subscribeToViewModelChanges(){
+        viewModel.posts.observe { [unowned self] (posts) in
+            let feedIndex = self.sections.firstIndex(where: {$0.type == .feed})!// TODO replace by ?? 0
+            let indexToUpdate = IndexPath(row: feedIndex, section: 0)
+            
+            self.collectionView.reloadItems(at: [indexToUpdate])
+        }
+        viewModel.savedPosts.observe { [unowned self] (posts) in
+            let savedFeedIndex = self.sections.firstIndex(where: {$0.type == .savedFeed})!// TODO replace by ?? 0
+            let indexToUpdate = IndexPath(row: savedFeedIndex, section: 0)
+            
+            self.collectionView.reloadItems(at: [indexToUpdate])
+        }
+    }
+    
     private func configureCollectionView() {
+        collectionView.register(FeedCell.self, forCellWithReuseIdentifier: FeedCell.identifier)
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView?.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellId)
     }
 }
 
@@ -52,12 +92,12 @@ extension FeedVC : TopBarListener, UICollectionViewDataSource, UICollectionViewD
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        Section.allCases.count
+        self.sections.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath)
-        cell.backgroundColor = indexPath.row == 0 ? .white : .black
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedCell.identifier, for: indexPath) as! FeedCell
+        cell.configure(with: sections[indexPath.row].posts())
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

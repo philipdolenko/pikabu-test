@@ -9,10 +9,10 @@
 import Foundation
 
 public struct Post: Codable {
-    let id: String
+    let id: Int
     let title: String
-    let images: [String]
-    let body: String
+    let images: [String]?
+    let body: String?
     var isSaved: Bool?
     
     private enum CodingKeys: String, CodingKey {
@@ -20,10 +20,10 @@ public struct Post: Codable {
     }
     
     init(
-        id: String,
+        id: Int,
         title: String,
-        images: [String],
-        body: String,
+        images: [String]?,
+        body: String?,
         isSaved: Bool? = nil
     ) {
         self.id = id
@@ -35,11 +35,10 @@ public struct Post: Codable {
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(String.self, forKey: .id)
+        id = try container.decode(Int.self, forKey: .id)
         title = try container.decode(String.self, forKey: .title)
-        images = try container.decode([String].self, forKey: .images)
-        body = try container.decode(String.self, forKey: .body)
-        
+        images = try? container.decode([String].self, forKey: .images)
+        body = try? container.decode(String.self, forKey: .body)
         isSaved = try? container.decode(Bool.self, forKey: .body)
     }
     
@@ -47,8 +46,14 @@ public struct Post: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(title, forKey: .title)
-        try container.encode(images, forKey: .images)
-        try container.encode(body, forKey: .body)
+        
+        if let images = images {
+            try container.encode(images, forKey: .images)
+        }
+        
+        if let body = body {
+            try container.encode(body, forKey: .body)
+        }
         
         if let isSaved = isSaved {
             try container.encode(isSaved, forKey: .isSaved)

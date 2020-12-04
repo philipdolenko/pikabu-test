@@ -9,7 +9,7 @@
 import UIKit
 
 
-class BaseCell: UICollectionViewCell {
+public class BaseCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
