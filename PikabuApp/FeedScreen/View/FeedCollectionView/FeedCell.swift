@@ -24,6 +24,8 @@ public class FeedCell: BaseCell, UICollectionViewDataSource, UICollectionViewDel
     
     override func setupViews() {
         let layout = UICollectionViewFlowLayout()
+        let width = UIScreen.main.bounds.size.width
+        layout.estimatedItemSize = CGSize(width: width, height: 10)
         layout.scrollDirection = .vertical
         
         let collectionView = UICollectionView(
@@ -40,7 +42,7 @@ public class FeedCell: BaseCell, UICollectionViewDataSource, UICollectionViewDel
         
         collectionView.backgroundColor = .white
         collectionView.register(PostCell.self, forCellWithReuseIdentifier: PostCell.identifier)
-        
+        collectionView.showsVerticalScrollIndicator = false
         collectionView.delegate = self
         collectionView.dataSource = self
         
@@ -53,48 +55,17 @@ public class FeedCell: BaseCell, UICollectionViewDataSource, UICollectionViewDel
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostCell.identifier, for: indexPath) as! PostCell
-        cell.configure(with: self.posts[indexPath.row])
+        cell.configure(with: self.posts[indexPath.row] )
         return cell
-    }
-    
-    
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        CGSize(width: frame.width , height: 100)
     }
     
     weak var collectionView: UICollectionView!
     var posts: [Post]!
     
-    
-    
     func configure(with posts: [Post]) {
         self.posts = posts
+        
+        self.collectionView.reloadData()
     }
 }
 
-
-class PostCell: BaseCell {
-    static let identifier = "PostCell"
-    
-    let postTitleLbl = UILabel()
-    
-    func configure(with post: Post){
-        postTitleLbl.text = post.title
-    }
-    
-    override func setupViews() {
-        super.setupViews()
-        
-        addSubview(postTitleLbl)
-        
-        postTitleLbl.textAlignment = .center
-        postTitleLbl.textColor = .black
-        
-        postTitleLbl.snp.makeConstraints { (make) in
-            make.left.equalToSuperview()
-            make.right.equalToSuperview()
-            make.top.equalToSuperview().offset(6)
-            make.height.equalTo(40)
-        }
-    }
-}

@@ -36,6 +36,10 @@ class TopBar: UIView {
         setupSelectedTabIndicator()
     }
     
+    func invalidateLayout(){
+        collectionView.collectionViewLayout.invalidateLayout()
+    }
+    
     private func setupColletionView(with selectedItem: Int){
         collectionView.backgroundColor = .clear
         collectionView.dataSource = self

@@ -54,6 +54,24 @@ class FeedVC: UIViewController {
         )
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        
+        guard let collectionView = collectionView else { return }
+        let offset = collectionView.contentOffset
+        let width = collectionView.bounds.size.width
+
+        let index = round(offset.x / width)
+        let newOffset = CGPoint(x: index * size.width, y: offset.y)
+
+        coordinator.animate(alongsideTransition: { (context) in
+            collectionView.reloadData()
+            collectionView.setContentOffset(newOffset, animated: false)
+        }, completion: nil)
+        
+        topBar.invalidateLayout()
+    }
+    
     
     private func subscribeToViewModelChanges(){
         viewModel.posts.observe { [unowned self] (posts) in
@@ -97,6 +115,7 @@ extension FeedVC : TopBarListener, UICollectionViewDataSource, UICollectionViewD
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedCell.identifier, for: indexPath) as! FeedCell
+        
         cell.configure(with: sections[indexPath.row].posts())
         return cell
     }
