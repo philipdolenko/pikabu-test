@@ -8,10 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		97B49C3C9161BCC2252E3B6B /* Pods_PikabuApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18C096965E9921D1B30ED5B3 /* Pods_PikabuApp.framework */; };
+		D44FC0BA257A421B008AD62C /* PikabuAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44FC0B9257A421B008AD62C /* PikabuAppTests.swift */; };
 		D4937DF82577B6A30073971B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4937DF72577B6A30073971B /* AppDelegate.swift */; };
-		D4937DFA2577B6A30073971B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4937DF92577B6A30073971B /* SceneDelegate.swift */; };
 		D4937DFC2577B6A30073971B /* FeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4937DFB2577B6A30073971B /* FeedVC.swift */; };
-		D4937DFF2577B6A30073971B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D4937DFD2577B6A30073971B /* Main.storyboard */; };
 		D4937E012577B6A40073971B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4937E002577B6A40073971B /* Assets.xcassets */; };
 		D4937E042577B6A40073971B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D4937E022577B6A40073971B /* LaunchScreen.storyboard */; };
 		D4937E1025780E750073971B /* FeedVC+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4937E0F25780E750073971B /* FeedVC+Layout.swift */; };
@@ -26,14 +25,25 @@
 		D4BAB50F2579843600BF48A7 /* NetworkingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BAB50E2579843600BF48A7 /* NetworkingService.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		D44FC0BC257A421B008AD62C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D4937DEC2577B6A30073971B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D4937DF32577B6A30073971B;
+			remoteInfo = PikabuApp;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		18C096965E9921D1B30ED5B3 /* Pods_PikabuApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PikabuApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E6B1673D954E49B5D57C513 /* Pods-PikabuApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PikabuApp.release.xcconfig"; path = "Target Support Files/Pods-PikabuApp/Pods-PikabuApp.release.xcconfig"; sourceTree = "<group>"; };
+		D44FC0B7257A421B008AD62C /* PikabuAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PikabuAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D44FC0B9257A421B008AD62C /* PikabuAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PikabuAppTests.swift; sourceTree = "<group>"; };
+		D44FC0BB257A421B008AD62C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D4937DF42577B6A30073971B /* PikabuApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PikabuApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4937DF72577B6A30073971B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		D4937DF92577B6A30073971B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		D4937DFB2577B6A30073971B /* FeedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedVC.swift; sourceTree = "<group>"; };
-		D4937DFE2577B6A30073971B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D4937E002577B6A40073971B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D4937E032577B6A40073971B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D4937E052577B6A40073971B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -51,6 +61,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		D44FC0B4257A421B008AD62C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D4937DF12577B6A30073971B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -79,10 +96,20 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		D44FC0B8257A421B008AD62C /* PikabuAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				D44FC0B9257A421B008AD62C /* PikabuAppTests.swift */,
+				D44FC0BB257A421B008AD62C /* Info.plist */,
+			);
+			path = PikabuAppTests;
+			sourceTree = "<group>";
+		};
 		D4937DEB2577B6A30073971B = {
 			isa = PBXGroup;
 			children = (
 				D4937DF62577B6A30073971B /* PikabuApp */,
+				D44FC0B8257A421B008AD62C /* PikabuAppTests */,
 				D4937DF52577B6A30073971B /* Products */,
 				A130480E12670E775DE4F88D /* Pods */,
 				334BA4EFE3C4DB6CD8E523E4 /* Frameworks */,
@@ -93,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				D4937DF42577B6A30073971B /* PikabuApp.app */,
+				D44FC0B7257A421B008AD62C /* PikabuAppTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -140,9 +168,7 @@
 		D4937E21257862A90073971B /* Application */ = {
 			isa = PBXGroup;
 			children = (
-				D4937DFD2577B6A30073971B /* Main.storyboard */,
 				D4937DF72577B6A30073971B /* AppDelegate.swift */,
-				D4937DF92577B6A30073971B /* SceneDelegate.swift */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -196,6 +222,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		D44FC0B6257A421B008AD62C /* PikabuAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D44FC0BE257A421B008AD62C /* Build configuration list for PBXNativeTarget "PikabuAppTests" */;
+			buildPhases = (
+				D44FC0B3257A421B008AD62C /* Sources */,
+				D44FC0B4257A421B008AD62C /* Frameworks */,
+				D44FC0B5257A421B008AD62C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D44FC0BD257A421B008AD62C /* PBXTargetDependency */,
+			);
+			name = PikabuAppTests;
+			productName = PikabuAppTests;
+			productReference = D44FC0B7257A421B008AD62C /* PikabuAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		D4937DF32577B6A30073971B /* PikabuApp */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D4937E082577B6A40073971B /* Build configuration list for PBXNativeTarget "PikabuApp" */;
@@ -225,6 +269,10 @@
 				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = "Philip Dolenko";
 				TargetAttributes = {
+					D44FC0B6257A421B008AD62C = {
+						CreatedOnToolsVersion = 11.3.1;
+						TestTargetID = D4937DF32577B6A30073971B;
+					};
 					D4937DF32577B6A30073971B = {
 						CreatedOnToolsVersion = 11.3.1;
 					};
@@ -244,18 +292,25 @@
 			projectRoot = "";
 			targets = (
 				D4937DF32577B6A30073971B /* PikabuApp */,
+				D44FC0B6257A421B008AD62C /* PikabuAppTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		D44FC0B5257A421B008AD62C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D4937DF22577B6A30073971B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				D4937E042577B6A40073971B /* LaunchScreen.storyboard in Resources */,
 				D4937E012577B6A40073971B /* Assets.xcassets in Resources */,
-				D4937DFF2577B6A30073971B /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -304,6 +359,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		D44FC0B3257A421B008AD62C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D44FC0BA257A421B008AD62C /* PikabuAppTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D4937DF02577B6A30073971B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -319,22 +382,21 @@
 				D4937DF82577B6A30073971B /* AppDelegate.swift in Sources */,
 				D4937E15257841080073971B /* BaseCell.swift in Sources */,
 				D4937E17257841280073971B /* BarCell.swift in Sources */,
-				D4937DFA2577B6A30073971B /* SceneDelegate.swift in Sources */,
 				D4937E29257869150073971B /* FeedViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXVariantGroup section */
-		D4937DFD2577B6A30073971B /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D4937DFE2577B6A30073971B /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
+/* Begin PBXTargetDependency section */
+		D44FC0BD257A421B008AD62C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D4937DF32577B6A30073971B /* PikabuApp */;
+			targetProxy = D44FC0BC257A421B008AD62C /* PBXContainerItemProxy */;
 		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
 		D4937E022577B6A40073971B /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -346,6 +408,44 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		D44FC0BF257A421B008AD62C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = PikabuAppTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.philipdolenko.PikabuAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PikabuApp.app/PikabuApp";
+			};
+			name = Debug;
+		};
+		D44FC0C0257A421B008AD62C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = PikabuAppTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.philipdolenko.PikabuAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PikabuApp.app/PikabuApp";
+			};
+			name = Release;
+		};
 		D4937E062577B6A40073971B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -503,6 +603,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		D44FC0BE257A421B008AD62C /* Build configuration list for PBXNativeTarget "PikabuAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D44FC0BF257A421B008AD62C /* Debug */,
+				D44FC0C0257A421B008AD62C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		D4937DEF2577B6A30073971B /* Build configuration list for PBXProject "PikabuApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -20,7 +20,7 @@ class FeedVC: UIViewController {
         case savedFeed = "Сохраненные"
     }
     
-    private var viewModel = FeedViewModel()
+    var viewModel: FeedViewModel!
     
     private lazy var sections: [Section] = {
         [

@@ -11,6 +11,15 @@ import Foundation
 
 public class FeedViewModel {
     
+    
+    init(localStorageService: LocalStorageService, networkingService: NetworkingService) {
+        self.localStorageService = localStorageService
+        self.networkingService = networkingService
+    }
+    
+    let localStorageService: LocalStorageService
+    let networkingService: NetworkingService
+    
     let posts: Observable<[Post]> = Observable([])
     let savedPosts: Observable<[Post]> = Observable([])
     
@@ -29,7 +38,7 @@ public class FeedViewModel {
             savedPosts.value.append(post)
         }
         
-        LocalStorageService.shared.savePosts(posts: savedPosts.value)
+        localStorageService.savePosts(posts: savedPosts.value)
         
         let index = posts.value.firstIndex(where: {$0.id == post.id})
         
@@ -39,9 +48,9 @@ public class FeedViewModel {
     }
     
     func viewDidLoad() {
-        savedPosts.value = LocalStorageService.shared.getAllSavedPosts()
+        savedPosts.value = localStorageService.getAllSavedPosts()
         
-        NetworkingService.shared.fetchAllPosts { [weak self] (fetchedPosts, err) in
+        networkingService.fetchAllPosts { [weak self] (fetchedPosts, err) in
             if var posts = fetchedPosts {
                 guard let `self` = self else { return }
                 
