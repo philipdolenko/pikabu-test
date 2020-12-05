@@ -27,6 +27,7 @@ extension FeedVC {
         collectionView.isPagingEnabled = true
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
+        collectionView.backgroundColor = .white
         view.addSubview(collectionView)
 
         collectionView.snp.makeConstraints { (make) in

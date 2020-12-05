@@ -13,7 +13,11 @@ public struct Post: Codable {
     let title: String
     let images: [String]?
     let body: String?
-    var isSaved: Bool?
+    var isSaved: Bool
+    
+    func map() -> PostDTO {
+        .init(id: id, title: title, images: images, body: body)
+    }
 }
 
 public struct PostDTO: Codable {
@@ -21,5 +25,9 @@ public struct PostDTO: Codable {
     let title: String
     let images: [String]?
     let body: String?
-    var isSaved: Bool?
+    
+    
+    func map(isSaved: Bool = false) -> Post {
+        .init(id: id, title: title, images: images, body: body, isSaved: isSaved)
+    }
 }

@@ -26,15 +26,12 @@ class LocalStorageService {
         if let data = try? JSONEncoder().encode(postsToSave) {
             defaults.set(data, forKey: savedPostsKey)
             
-            print("SUCCES savePost")
         }
     }
     
     func getAllSavedPosts() -> [Post] {
         if let data = defaults.value(forKey: savedPostsKey) as? Data,
             let posts = try? JSONDecoder().decode([Post].self, from: data) {
-            
-            print("SUCCES getAllSavedPosts")
             return posts
         }
         

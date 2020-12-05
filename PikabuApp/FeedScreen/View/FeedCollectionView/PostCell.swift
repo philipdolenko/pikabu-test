@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol PostSaveStateHandler {
+    func switchSaveState(for post: Post)
+}
+
 class PostCell: BaseCell {
     static let identifier = "PostCell"
     
@@ -15,26 +19,41 @@ class PostCell: BaseCell {
     let bodyLbl = UILabel()
     let saveButton = UIButton()
     
-    override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
-        contentView.snp.remakeConstraints { (make) in
-            make.width.equalTo(bounds.size.width)
-        }
-        return contentView.systemLayoutSizeFitting(CGSize(width: targetSize.width, height: 1))
-    }
+    var saveTapped:((Post) -> ())? = nil
+
+    private let contentMargin: CGFloat = 16
+    private lazy var halfOfContentMargin = self.contentMargin / 2.0
     
-    private func setUpLabel(label: UILabel, with font: UIFont) {
-        label.numberOfLines = 0
-        label.font = font
-        label.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(label)
+    var post: Post? = nil
+    
+    func configure(with post: Post, and saveTapped: @escaping ((Post) -> ())){
+        self.post = post
+        self.saveTapped = saveTapped
+        
+        
+        titleLbl.text = post.title
+        bodyLbl.text = post.body ?? ""
+        
+        saveButton.imageView?.tintColor = post.isSaved ? .deepGreen : .gray
+        
+        let shouldHaveTopOffset = post.body != nil && post.body != ""
+        bodyLbl.snp.updateConstraints { (make) in
+            make.top.equalTo(titleLbl.snp.bottom).offset(shouldHaveTopOffset ? 8: 0)
+        }
     }
     
     override func setupViews() {
-        let contentMargin: CGFloat = 16
-        let halfOfContentMargin = contentMargin / 2.0
-        
         contentView.translatesAutoresizingMaskIntoConstraints = false
         
+        setUpLabels()
+        setUpSaveButton()
+        
+        if let lastSubview = contentView.subviews.last {
+            contentView.bottomAnchor.constraint(equalTo: lastSubview.bottomAnchor, constant: 4).isActive = true
+        }
+    }
+    
+    private func setUpLabels(){
         setUpLabel(label: titleLbl, with: .systemFont(ofSize: 24, weight: .bold))
         
         titleLbl.snp.makeConstraints { (make) in
@@ -50,40 +69,49 @@ class PostCell: BaseCell {
             make.right.equalTo(titleLbl.snp.right)
             make.top.equalTo(titleLbl.snp.bottom).offset(8)
         }
-        
+    }
+    
+    @objc func didButtonClick(_ sender: UIButton) {
+        if let post = post, let saveTapped = saveTapped {
+            saveTapped(post)
+        }
+    }
+    
+    private func setUpLabel(label: UILabel, with font: UIFont) {
+        label.numberOfLines = 0
+        label.font = font
+        label.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(label)
+    }
+    
+    private func setUpSaveButton(){
         saveButton.backgroundColor = .clear
         saveButton.setTitleColor(.black, for: .normal)
         saveButton.adjustsImageWhenHighlighted = false
         saveButton.contentHorizontalAlignment = .left
+        saveButton.setTitle("Сохранить", for: .normal)
+        
+        saveButton.addTarget(self, action: #selector(didButtonClick), for: .touchUpInside)
+        
+        contentView.addSubview(saveButton)
         
         if let saveImage = UIImage(named: "save") {
             saveButton.setImage(saveImage.withRenderingMode(.alwaysTemplate), for: .normal)
             saveButton.imageView?.tintColor = .deepGreen
             saveButton.alignTextAndImage(spacing: 8, leftOffset: halfOfContentMargin, rightOffset: halfOfContentMargin)
         }
-        contentView.addSubview(saveButton)
         
         saveButton.snp.makeConstraints { (make) in
             make.left.equalTo(contentView.snp.left).offset(halfOfContentMargin)
             make.top.equalTo(bodyLbl.snp.bottom).offset(8)
             make.height.equalTo(44)
         }
-        
-        if let lastSubview = contentView.subviews.last {
-            contentView.bottomAnchor.constraint(equalTo: lastSubview.bottomAnchor, constant: 4).isActive = true
-        }
     }
     
-    func configure(with post: Post){
-        titleLbl.text = post.title
-        bodyLbl.text = post.body ?? ""
-        
-        let shouldHaveTopOffset = post.body != nil && post.body != ""
-        bodyLbl.snp.updateConstraints { (make) in
-            make.top.equalTo(titleLbl.snp.bottom).offset(shouldHaveTopOffset ? 8: 0)
+    override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
+        contentView.snp.remakeConstraints { (make) in
+            make.width.equalTo(bounds.size.width)
         }
-        
-        saveButton.setTitle("Сохранить", for: .normal)
+        return contentView.systemLayoutSizeFitting(CGSize(width: targetSize.width, height: 1))
     }
-    
 }

@@ -9,8 +9,37 @@
 import Foundation
 
 
-public class FeedViewModel {
+public class FeedViewModel: PostSaveStateHandler {
     
+    struct Section {
+        let type: SectionType
+        let posts: () -> [Post]
+        let postSaver: PostSaveStateHandler
+    }
+    
+    enum SectionType: String {
+        case feed = "Лента"
+        case savedFeed = "Сохраненные"
+    }
+    
+    lazy var sections: [Section] = {
+        [
+            .init(
+                type: .feed,
+                posts: { [unowned self] in
+                    self.posts.value
+                },
+                postSaver: self
+            ),
+            .init(
+                type: .savedFeed,
+                posts: { [unowned self] in
+                    self.savedPosts.value
+                },
+                postSaver: self
+            )
+        ]
+    }()
     
     init(localStorageService: LocalStorageService, networkingService: NetworkingService) {
         self.localStorageService = localStorageService
@@ -29,21 +58,24 @@ public class FeedViewModel {
         return index != nil
     }
     
-    func tuggleSaveState(for post: Post) {
-        let oldSavedStatus = post.isSaved ?? getSaveStatus(for: post)
+    func switchSaveState(for post: Post) {
+        let oldIsSavedState = post.isSaved
         
-        if oldSavedStatus {
-            savedPosts.value.removeAll(where: {$0.id == post.id})
+        var updatedPost = post
+        updatedPost.isSaved = !oldIsSavedState
+        
+        if oldIsSavedState {
+            savedPosts.value.removeAll(where: {$0.id == updatedPost.id})
         } else {
-            savedPosts.value.append(post)
+            savedPosts.value.append(updatedPost)
         }
         
         localStorageService.savePosts(posts: savedPosts.value)
         
-        let index = posts.value.firstIndex(where: {$0.id == post.id})
+        let index = posts.value.firstIndex(where: {$0.id == updatedPost.id})
         
         if let index = index {
-            posts.value[index].isSaved = !oldSavedStatus
+            posts.value[index] = updatedPost
         }
     }
     
@@ -51,16 +83,19 @@ public class FeedViewModel {
         savedPosts.value = localStorageService.getAllSavedPosts()
         
         networkingService.fetchAllPosts { [weak self] (fetchedPosts, err) in
-            if var posts = fetchedPosts {
+            if let fetchedPosts = fetchedPosts {
                 guard let `self` = self else { return }
                 
-                for i in 0..<posts.count {
-                    posts[i].isSaved = self.savedPosts.value.contains(where: {$0.id == posts[i].id})
+                var posts = [Post]()
+                
+                for postDTO in fetchedPosts {
+                    let isSaved = self.savedPosts.value.contains(where: {$0.id == postDTO.id})
+                    
+                    posts.append(postDTO.map(isSaved: isSaved))
                 }
                 
                 self.posts.value = posts
             }
         }
     }
-    
 }
