@@ -10,6 +10,8 @@
 		97B49C3C9161BCC2252E3B6B /* Pods_PikabuApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18C096965E9921D1B30ED5B3 /* Pods_PikabuApp.framework */; };
 		D44FC0BA257A421B008AD62C /* PikabuAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44FC0B9257A421B008AD62C /* PikabuAppTests.swift */; };
 		D44FC0C7257A6DAE008AD62C /* PostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44FC0C6257A6DAE008AD62C /* PostCell.swift */; };
+		D492F5EB257BC510001FB222 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = D492F5EA257BC510001FB222 /* Colors.swift */; };
+		D492F5F1257BEF82001FB222 /* UIButton+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D492F5F0257BEF81001FB222 /* UIButton+Extension.swift */; };
 		D4937DF82577B6A30073971B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4937DF72577B6A30073971B /* AppDelegate.swift */; };
 		D4937DFC2577B6A30073971B /* FeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4937DFB2577B6A30073971B /* FeedVC.swift */; };
 		D4937E012577B6A40073971B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4937E002577B6A40073971B /* Assets.xcassets */; };
@@ -43,6 +45,8 @@
 		D44FC0B9257A421B008AD62C /* PikabuAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PikabuAppTests.swift; sourceTree = "<group>"; };
 		D44FC0BB257A421B008AD62C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D44FC0C6257A6DAE008AD62C /* PostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCell.swift; sourceTree = "<group>"; };
+		D492F5EA257BC510001FB222 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		D492F5F0257BEF81001FB222 /* UIButton+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+Extension.swift"; sourceTree = "<group>"; };
 		D4937DF42577B6A30073971B /* PikabuApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PikabuApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4937DF72577B6A30073971B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D4937DFB2577B6A30073971B /* FeedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedVC.swift; sourceTree = "<group>"; };
@@ -114,6 +118,14 @@
 				D44FC0C6257A6DAE008AD62C /* PostCell.swift */,
 			);
 			path = FeedCollectionView;
+			sourceTree = "<group>";
+		};
+		D492F5EF257BEF81001FB222 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				D492F5F0257BEF81001FB222 /* UIButton+Extension.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		D4937DEB2577B6A30073971B = {
@@ -226,6 +238,8 @@
 			children = (
 				D4937E14257841080073971B /* BaseCell.swift */,
 				D4937E2E257873270073971B /* Observable.swift */,
+				D492F5EF257BEF81001FB222 /* Extensions */,
+				D492F5EA257BC510001FB222 /* Colors.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -385,10 +399,12 @@
 				D4937E2F257873270073971B /* Observable.swift in Sources */,
 				D4937E3325787ABC0073971B /* FeedCell.swift in Sources */,
 				D44FC0C7257A6DAE008AD62C /* PostCell.swift in Sources */,
+				D492F5EB257BC510001FB222 /* Colors.swift in Sources */,
 				D4937E31257879020073971B /* LocalStorageService.swift in Sources */,
 				D4937E1025780E750073971B /* FeedVC+Layout.swift in Sources */,
 				D4937DFC2577B6A30073971B /* FeedVC.swift in Sources */,
 				D4BAB50F2579843600BF48A7 /* NetworkingService.swift in Sources */,
+				D492F5F1257BEF82001FB222 /* UIButton+Extension.swift in Sources */,
 				D4937E12257815D90073971B /* TopBar.swift in Sources */,
 				D4937E26257865DA0073971B /* Post.swift in Sources */,
 				D4937DF82577B6A30073971B /* AppDelegate.swift in Sources */,

@@ -42,8 +42,8 @@ extension FeedVC {
     func createTopBar(){
         let topBar = TopBar()
         let bgView = UIView()
-        topBar.backgroundColor = #colorLiteral(red: 0.4918432832, green: 0.6988996863, blue: 0.2623156905, alpha: 1)
-        bgView.backgroundColor = #colorLiteral(red: 0.4918432832, green: 0.6988996863, blue: 0.2623156905, alpha: 1)
+        topBar.backgroundColor = .deepGreen
+        bgView.backgroundColor = .deepGreen
         
         view.addSubview(topBar)
         view.addSubview(bgView)
