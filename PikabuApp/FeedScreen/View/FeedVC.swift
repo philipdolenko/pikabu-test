@@ -51,18 +51,19 @@ class FeedVC: UIViewController {
             let feedIndex = self.viewModel.sections.firstIndex(where: {$0.type == .feed})!// TODO replace by ?? 0
             let indexToUpdate = IndexPath(row: feedIndex, section: 0)
             
-            guard let collectionViewCell = self.collectionView.dequeueReusableCell(withReuseIdentifier: FeedCell.identifier, for: indexToUpdate) as? FeedCell else { return }
-            print(collectionViewCell.lastValidOffset)
-            self.storedOffsets[indexToUpdate.row] = collectionViewCell.lastValidOffset
+            guard let collectionViewCell = self.collectionView.cellForItem(at: indexToUpdate) as? FeedCell else { return }
+            
+            self.storedOffsets[indexToUpdate.row] = collectionViewCell.collectionViewOffset
+            
             self.collectionView.reloadItems(at: [indexToUpdate])
         }
         viewModel.savedPosts.observe { [unowned self] (posts) in
             let savedFeedIndex = self.viewModel.sections.firstIndex(where: {$0.type == .savedFeed})!// TODO replace by ?? 0
             let indexToUpdate = IndexPath(row: savedFeedIndex, section: 0)
             
-            guard let collectionViewCell = self.collectionView.dequeueReusableCell(withReuseIdentifier: FeedCell.identifier, for: indexToUpdate) as? FeedCell else { return }
-            print(collectionViewCell.lastValidOffset)
-            self.storedOffsets[indexToUpdate.row] = collectionViewCell.lastValidOffset
+            guard let collectionViewCell = self.collectionView.cellForItem(at: indexToUpdate) as? FeedCell else { return }
+            
+            self.storedOffsets[indexToUpdate.row] = collectionViewCell.collectionViewOffset
             
             self.collectionView.reloadItems(at: [indexToUpdate])
         }

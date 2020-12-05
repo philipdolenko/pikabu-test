@@ -19,16 +19,16 @@ class PostCell: BaseCell {
     let bodyLbl = UILabel()
     let saveButton = UIButton()
     
-    var saveTapped:((Post) -> ())? = nil
 
     private let contentMargin: CGFloat = 16
     private lazy var halfOfContentMargin = self.contentMargin / 2.0
     
     var post: Post? = nil
+    var postSaver: PostSaveStateHandler? = nil
     
-    func configure(with post: Post, and saveTapped: @escaping ((Post) -> ())){
+    func configure(with post: Post, and postSaver: PostSaveStateHandler){
         self.post = post
-        self.saveTapped = saveTapped
+        self.postSaver = postSaver
         
         
         titleLbl.text = post.title
@@ -72,8 +72,8 @@ class PostCell: BaseCell {
     }
     
     @objc func didButtonClick(_ sender: UIButton) {
-        if let post = post, let saveTapped = saveTapped {
-            saveTapped(post)
+        if let post = post, let postSaver = postSaver {
+            postSaver.switchSaveState(for: post)
         }
     }
     

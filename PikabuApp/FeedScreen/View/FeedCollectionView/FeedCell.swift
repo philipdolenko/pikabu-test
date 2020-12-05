@@ -75,15 +75,10 @@ public class FeedCell: BaseCell, UICollectionViewDataSource, UICollectionViewDel
         posts.count
     }
     
-    var lastValidOffset: CGFloat = 0
-    
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostCell.identifier, for: indexPath) as! PostCell
         if let postSaver = postSaver {
-            cell.configure(with: self.posts[indexPath.row]) { post in
-                self.lastValidOffset = collectionView.contentOffset.y
-                postSaver.switchSaveState(for: post)
-            }
+            cell.configure(with: self.posts[indexPath.row], and: postSaver)
         }
         return cell
     }
