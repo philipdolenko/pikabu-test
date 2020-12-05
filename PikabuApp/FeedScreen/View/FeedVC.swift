@@ -22,33 +22,14 @@ class FeedVC: UIViewController {
         configureCollectionView()
         subscribeToViewModelChanges()
         topBar.configure(
-            tabsNames: viewModel.sections.map({$0.type.rawValue}),
+            tabsNames: FeedViewModel.SectionType.allCases.map({$0.title}),
             listener: self
         )
     }
     
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        
-        guard let collectionView = collectionView else { return }
-        let offset = collectionView.contentOffset
-        let width = collectionView.bounds.size.width
-
-        let index = round(offset.x / width)
-        let newOffset = CGPoint(x: index * size.width, y: offset.y)
-
-        coordinator.animate(alongsideTransition: { (context) in
-            collectionView.reloadData()
-            collectionView.setContentOffset(newOffset, animated: false)
-        }, completion: nil)
-        
-        topBar.invalidateLayout()
-    }
-    
-    
     private func subscribeToViewModelChanges(){
         viewModel.posts.observe { [unowned self] (posts) in
-            let feedIndex = self.viewModel.sections.firstIndex(where: {$0.type == .feed})!// TODO replace by ?? 0
+            let feedIndex = FeedViewModel.SectionType.feed.rawValue
             let indexToUpdate = IndexPath(row: feedIndex, section: 0)
             
             guard let collectionViewCell = self.collectionView.cellForItem(at: indexToUpdate) as? FeedCell else { return }
@@ -58,7 +39,7 @@ class FeedVC: UIViewController {
             self.collectionView.reloadItems(at: [indexToUpdate])
         }
         viewModel.savedPosts.observe { [unowned self] (posts) in
-            let savedFeedIndex = self.viewModel.sections.firstIndex(where: {$0.type == .savedFeed})!// TODO replace by ?? 0
+            let savedFeedIndex = FeedViewModel.SectionType.savedFeed.rawValue
             let indexToUpdate = IndexPath(row: savedFeedIndex, section: 0)
             
             guard let collectionViewCell = self.collectionView.cellForItem(at: indexToUpdate) as? FeedCell else { return }
@@ -78,21 +59,28 @@ class FeedVC: UIViewController {
     var storedOffsets = [Int: CGFloat]()
 }
 
-extension FeedVC : TopBarListener, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout  {
+extension FeedVC {
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        
+        guard let collectionView = collectionView else { return }
+        let offset = collectionView.contentOffset
+        let width = collectionView.bounds.size.width
 
-//    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-//        guard let collectionViewCell = cell as? FeedCell else { return }
-//        let offset = storedOffsets[indexPath.row] ?? 0
-//        collectionViewCell.layoutIfNeeded()
-//        collectionViewCell.collectionViewOffset = offset
-//    }
-//
-//     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-//        guard let collectionViewCell = cell as? FeedCell else { return }
-//        let offset = collectionViewCell.collectionViewOffset
-//        storedOffsets[indexPath.row] = offset
-//    }
+        let index = round(offset.x / width)
+        let newOffset = CGPoint(x: index * size.width, y: offset.y)
+
+        coordinator.animate(alongsideTransition: { (context) in
+            collectionView.reloadData()
+            collectionView.setContentOffset(newOffset, animated: false)
+        }, completion: nil)
+        
+        topBar.invalidateLayout()
+    }
+}
+
+extension FeedVC : TopBarListener, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout  {
     
     func scrollToBarIndex(index: Int) {
         let indexPath = IndexPath(item: index, section: 0)
@@ -108,15 +96,22 @@ extension FeedVC : TopBarListener, UICollectionViewDataSource, UICollectionViewD
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        self.viewModel.sections.count
+        FeedViewModel.SectionType.allCases.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedCell.identifier, for: indexPath) as! FeedCell
-        let section = viewModel.sections[indexPath.row]
-        cell.configure(with: section.posts(), postSaver: section.postSaver, scrollOffset: storedOffsets[indexPath.row] ?? 0)
+        
+        guard let section = FeedViewModel.SectionType.init(rawValue: indexPath.row) else { return UICollectionViewCell() }
+        
+        let posts = viewModel.getPosts(for: section)
+        let offset = storedOffsets[indexPath.row] ?? 0
+        
+        cell.configure(with: posts, postSaver: viewModel, scrollOffset: offset)
+        
         return cell
     }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
     }

@@ -11,35 +11,28 @@ import Foundation
 
 public class FeedViewModel: PostSaveStateHandler {
     
-    struct Section {
-        let type: SectionType
-        let posts: () -> [Post]
-        let postSaver: PostSaveStateHandler
+    enum SectionType: Int, CaseIterable {
+        case feed
+        case savedFeed
+        
+        var title: String {
+            switch self {
+            case .feed:
+                return "Лента"
+            case .savedFeed:
+                return "Сохраненные"
+            }
+        }
     }
     
-    enum SectionType: String {
-        case feed = "Лента"
-        case savedFeed = "Сохраненные"
+    func getPosts(for section: SectionType) -> [Post] {
+        switch section {
+        case .feed:
+            return posts.value
+        case .savedFeed:
+            return savedPosts.value
+        }
     }
-    
-    lazy var sections: [Section] = {
-        [
-            .init(
-                type: .feed,
-                posts: { [unowned self] in
-                    self.posts.value
-                },
-                postSaver: self
-            ),
-            .init(
-                type: .savedFeed,
-                posts: { [unowned self] in
-                    self.savedPosts.value
-                },
-                postSaver: self
-            )
-        ]
-    }()
     
     init(localStorageService: LocalStorageService, networkingService: NetworkingService) {
         self.localStorageService = localStorageService
@@ -86,16 +79,20 @@ public class FeedViewModel: PostSaveStateHandler {
             if let fetchedPosts = fetchedPosts {
                 guard let `self` = self else { return }
                 
-                var posts = [Post]()
-                
-                for postDTO in fetchedPosts {
-                    let isSaved = self.savedPosts.value.contains(where: {$0.id == postDTO.id})
-                    
-                    posts.append(postDTO.map(isSaved: isSaved))
-                }
-                
-                self.posts.value = posts
+                self.processPostsFromServer(fetchedPosts)
             }
         }
+    }
+    
+    private func processPostsFromServer(_ fetchedPosts: [PostDTO]){
+        var posts = [Post]()
+        
+        for postDTO in fetchedPosts {
+            let isSaved = self.savedPosts.value.contains(where: {$0.id == postDTO.id})
+            
+            posts.append(postDTO.map(isSaved: isSaved))
+        }
+        
+        self.posts.value = posts
     }
 }
