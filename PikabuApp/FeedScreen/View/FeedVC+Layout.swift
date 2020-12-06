@@ -14,8 +14,22 @@ extension FeedVC {
     func setUpView(){
         createTopBar()
         createCollectionView()
+        createLoadingIndicator()
         
         view.backgroundColor = .white
+    }
+    
+    func createLoadingIndicator(){
+        let indicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.white)
+        indicator.frame = CGRect(x: 0.0, y: 0.0, width: 50.0, height: 50.0)
+        indicator.center = view.center
+        indicator.layer.backgroundColor = UIColor.black.withAlphaComponent(0.4).cgColor
+        indicator.layer.cornerRadius = 5
+        view.addSubview(indicator)
+        
+        self.indicator = indicator
+        
+        self.view.bringSubviewToFront(indicator)
     }
     
     func createCollectionView(){

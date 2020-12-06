@@ -14,13 +14,11 @@ protocol TopBarListener {
 
 class TopBar: UIView {
     
-    private var collectionView: UICollectionView!
+    private weak var collectionView: UICollectionView!
+    private weak var selectedTabIndicator: UIView?
     private var tabsNames: [String]!
     private var tabsSize: Int { tabsNames.count }
-    private var selectedTabIndicator: UIView!
     private var listener: TopBarListener?
-    
-    private let contentView = UIView()
     
     func configure(tabsNames: [String], listener: TopBarListener? = nil, selectedItem: Int = 0){
         self.tabsNames = tabsNames
@@ -34,46 +32,32 @@ class TopBar: UIView {
             #endif
         }
         
-        setupColletionView(with: selectedItem)
         setupSelectedTabIndicator()
-    }
-    
-    func setUpContentView(){
-        addSubview(contentView)
-        contentView.snp.makeConstraints { (make) in
-            if #available(iOS 11, *) {
-                make.left.equalTo(safeAreaLayoutGuide.snp.left)
-                make.right.equalTo(safeAreaLayoutGuide.snp.right)
-            } else {
-                make.left.equalToSuperview()
-                make.right.equalToSuperview()
-            }
-            make.top.equalToSuperview()
-            make.bottom.equalToSuperview()
-        }
+        
+        selectItem(selectedItem, animated: false)
     }
     
     func invalidateLayout(){
         collectionView.collectionViewLayout.invalidateLayout()
     }
     
-    private func setupColletionView(with selectedItem: Int){
-        collectionView.backgroundColor = .clear
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.register(BarCell.self, forCellWithReuseIdentifier: BarCell.identifier)
+    func selectItem(_ index: Int, animated: Bool = true){
+        guard index >= 0, index < tabsSize else { return }
         
-        addSubview(collectionView)
-        
-        self.collectionView.snp.makeConstraints { (make) in
-            make.edges.equalToSuperview()
+        let indexPath = IndexPath(item: index, section: 0)
+        collectionView.selectItem(at: indexPath, animated: animated, scrollPosition: .centeredHorizontally)
+    }
+    
+    func moveIndicator(_ x: CGFloat){
+        selectedTabIndicator?.snp.updateConstraints { (make) in
+            make.left.equalToSuperview().offset((collectionView.frame.width * x) / CGFloat(tabsSize))
         }
-        
-        let selectedIndexPath = IndexPath(item: selectedItem, section: 0)
-        collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .bottom)
     }
     
     private func setupSelectedTabIndicator() {
+        if let selectedTabIndicator = selectedTabIndicator {
+            selectedTabIndicator.removeFromSuperview()
+        }
         let selectedTabIndicator = UIView()
         selectedTabIndicator.backgroundColor = UIColor.white.withAlphaComponent(0.85)
         selectedTabIndicator.translatesAutoresizingMaskIntoConstraints = false
@@ -92,29 +76,27 @@ class TopBar: UIView {
         self.selectedTabIndicator = selectedTabIndicator
     }
     
-    func selectItem(_ index: Int){
-        guard index >= 0, index < tabsSize else { return }
+    private func setupColletionView(){
+        let layout = UICollectionViewFlowLayout()
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         
-        let indexPath = IndexPath(item: index, section: 0)
-        collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
-    }
-    
-    func moveIndicator(_ x: CGFloat){
-        let window = UIApplication.shared.windows.first { $0.isKeyWindow }
+        collectionView.backgroundColor = .clear
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.register(BarCell.self, forCellWithReuseIdentifier: BarCell.identifier)
         
-        let padding = window?.safeAreaInsets.left ?? 0
+        addSubview(collectionView)
         
-        
-        
-        selectedTabIndicator.snp.updateConstraints { (make) in
-            make.left.equalToSuperview().offset((collectionView.frame.width * x) / CGFloat(tabsSize))
+        collectionView.snp.makeConstraints { (make) in
+            make.edges.equalToSuperview()
         }
+        
+        self.collectionView = collectionView
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        let layout = UICollectionViewFlowLayout()
-        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        setupColletionView()
     }
     
     required init?(coder aDecoder: NSCoder) {

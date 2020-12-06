@@ -10,13 +10,22 @@ import UIKit
 import SnapKit
 
 
-public class FeedCell: BaseCell, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+public class FeedCell: UICollectionViewCell, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     static let identifier = "FeedCell"
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.setUpView()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     weak var collectionView: UICollectionView!
     var posts: [Post] = []
-    var postSaver: PostSaveStateHandler? = nil
+    var postSaver: PostCellDelegate? = nil
     
     var collectionViewOffset: CGPoint {
         set { collectionView.contentOffset = newValue }
@@ -31,7 +40,7 @@ public class FeedCell: BaseCell, UICollectionViewDataSource, UICollectionViewDel
         super.layoutIfNeeded()
     }
     
-    func configure(with posts: [Post], postSaver: PostSaveStateHandler, scrollOffset: CGPoint) {
+    func configure(with posts: [Post], postSaver: PostCellDelegate, scrollOffset: CGPoint) {
         self.posts = posts
         self.postSaver = postSaver
         
@@ -65,7 +74,7 @@ public class FeedCell: BaseCell, UICollectionViewDataSource, UICollectionViewDel
         }
     }
     
-    override func setupViews() {
+    func setUpView() {
         let layout = UICollectionViewFlowLayout()
         let width = UIScreen.main.bounds.size.width
         layout.estimatedItemSize = CGSize(width: width, height: 10)

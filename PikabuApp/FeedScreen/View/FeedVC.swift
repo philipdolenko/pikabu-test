@@ -17,12 +17,14 @@ class FeedVC: UIViewController {
     
     private var storedOffsets = [Int: CGPoint]()
     
+    weak var indicator: UIActivityIndicatorView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpView()
-        viewModel.viewDidLoad()
         configureCollectionView()
         subscribeToViewModelChanges()
+        viewModel.viewDidLoad()
         topBar.configure(
             tabsNames: FeedViewModel.SectionType.allCases.map({$0.title}),
             listener: self
@@ -36,12 +38,24 @@ class FeedVC: UIViewController {
     }
     
     private func subscribeToViewModelChanges(){
-        viewModel.posts.observe { [unowned self] (posts) in
+        viewModel.posts.observe { [unowned self] (_) in
             self.updateSection(.feed)
         }
-        viewModel.savedPosts.observe { [unowned self] (posts) in
+        viewModel.savedPosts.observe { [unowned self] (_) in
             self.updateSection(.savedFeed)
         }
+        viewModel.isLoading.observe { [unowned self]  (loading) in
+            updateIndicator(loading)
+        }
+    }
+    
+    func updateIndicator(_ loading: Bool){
+        if loading {
+            indicator.startAnimating()
+        } else {
+            indicator.stopAnimating()
+        }
+        UIApplication.shared.isNetworkActivityIndicatorVisible = loading
     }
     
     private func updateSection(_ section: FeedViewModel.SectionType) {

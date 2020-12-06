@@ -16,6 +16,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         
+        let rootVC = getRootViewController()
+        
+        window?.rootViewController = rootVC
+        window?.makeKeyAndVisible()
+        
+        return true
+    }
+    
+    func getRootViewController() -> UIViewController{
         let storage = LocalStorageService()
         let networking = NetworkingService()
         
@@ -23,10 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         feedVC.viewModel = FeedViewModel(localStorageService: storage, networkingService: networking)
         
-        window?.rootViewController = feedVC
-        window?.makeKeyAndVisible()
-        
-        return true
+        return feedVC
     }
 }
 

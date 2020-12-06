@@ -9,25 +9,30 @@
 import UIKit
 import Kingfisher
 
-
-protocol PostSaveStateHandler {
-    func switchSaveState(for post: Post)
-}
-
-class PostCell: BaseCell {
+class PostCell: UICollectionViewCell {
     static let identifier = "PostCell"
     
-    let titleLbl =  UILabel()
-    let bodyLbl = UILabel()
-    let saveButton = UIButton()
-    let imageTableView = UITableView()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.setUpView()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    weak var titleLbl: UILabel!
+    weak var bodyLbl: UILabel!
+    weak var saveButton: UIButton!
+    weak var imageTableView: UITableView!
+    
     let contentMargin: CGFloat = 16
     let imageTableHeight: CGFloat = 300
     
     var post: Post? = nil
-    var postSaver: PostSaveStateHandler? = nil
+    var postSaver: PostCellDelegate? = nil
     
-    func configure(with post: Post, and postSaver: PostSaveStateHandler){
+    func configure(with post: Post, and postSaver: PostCellDelegate){
         self.post = post
         self.postSaver = postSaver
         
@@ -39,30 +44,18 @@ class PostCell: BaseCell {
         saveButton.imageView?.tintColor = post.isSaved ? .deepGreen : .gray
         
         let shouldHaveTopOffset = post.body != nil && post.body != ""
+        
+        imageTableView.reloadData()
+        
         bodyLbl.snp.updateConstraints { (make) in
             make.top.equalTo(imageTableView.snp.bottom).offset(shouldHaveTopOffset ? 8: 0)
         }
-        imageTableView.reloadData()
-        let hideImages = post.images?.isEmpty ?? true
-        imageTableView.isHidden = hideImages
+        
         imageTableView.snp.updateConstraints { (make) in
-            make.top.equalTo(titleLbl.snp.bottom).offset(hideImages ? 0: 8)
-            let y: CGFloat = CGFloat((post.images?.count ?? 1))
-            let x:CGFloat = imageTableHeight * y
-            make.height.equalTo(hideImages ? 0 : x)
-        }
-    }
-    
-    override func setupViews() {
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-        
-        setUpTitleLbl()
-        setUpImageTableView()
-        setUpBodyLbl()
-        setUpSaveButton()
-        
-        if let lastSubview = contentView.subviews.last {
-            contentView.bottomAnchor.constraint(equalTo: lastSubview.bottomAnchor, constant: 4).isActive = true
+            let imagesCount = CGFloat(post.images?.count ?? 0)
+            let contentHeight:CGFloat = imagesCount * imageTableHeight
+
+            make.height.equalTo(contentHeight)
         }
     }
     
@@ -71,86 +64,13 @@ class PostCell: BaseCell {
             postSaver.switchSaveState(for: post)
         }
     }
-}
-
-extension PostCell {
-    private func setUpTitleLbl(){
-        setUpLabel(label: titleLbl, with: .systemFont(ofSize: 24, weight: .bold))
-        
-        titleLbl.snp.makeConstraints { (make) in
-            make.left.equalToSuperview().offset(contentMargin)
-            make.right.equalToSuperview().offset(-contentMargin)
-            make.top.equalToSuperview().offset(12)
+    @objc
+    func didTitleClick(sender:UITapGestureRecognizer) {
+        if let post = post, let postSaver = postSaver {
+            postSaver.tappedOnPost(with: post.id)
         }
-    }
-    
-    private func setUpBodyLbl(){
-        setUpLabel(label: bodyLbl, with: .systemFont(ofSize: 16))
-        
-        bodyLbl.snp.makeConstraints { (make) in
-            make.left.equalTo(titleLbl.snp.left)
-            make.right.equalTo(titleLbl.snp.right)
-            make.top.equalTo(imageTableView.snp.bottom).offset(8)
-        }
-    }
-    
-    private func setUpLabel(label: UILabel, with font: UIFont) {
-        label.numberOfLines = 0
-        label.font = font
-        label.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(label)
-    }
-    
-    private func setUpImageTableView(){
-        contentView.addSubview(imageTableView)
-        imageTableView.isScrollEnabled = false
-        imageTableView.register(PostImageCell.self, forCellReuseIdentifier: PostImageCell.identifier)
-        imageTableView.rowHeight = imageTableHeight
-        imageTableView.delegate = self
-        imageTableView.dataSource = self
-        imageTableView.backgroundColor = .red
-        imageTableView.snp.makeConstraints { (make) in
-            make.top.equalTo(titleLbl.snp.bottom).offset(8)
-            make.left.equalToSuperview().offset(contentMargin)
-            make.right.equalToSuperview().offset(-contentMargin)
-            make.height.equalTo(imageTableHeight)
-        }
-    }
-    
-    private func setUpSaveButton(){
-        saveButton.backgroundColor = .clear
-        saveButton.setTitleColor(.black, for: .normal)
-        saveButton.adjustsImageWhenHighlighted = false
-        saveButton.contentHorizontalAlignment = .left
-        saveButton.setTitle("Сохранить", for: .normal)
-        
-        saveButton.addTarget(self, action: #selector(didButtonClick), for: .touchUpInside)
-        
-        contentView.addSubview(saveButton)
-        
-        let halfOfContentMargin = contentMargin / 2
-        
-        if let saveImage = UIImage(named: "save") {
-            saveButton.setImage(saveImage.withRenderingMode(.alwaysTemplate), for: .normal)
-            saveButton.imageView?.tintColor = .deepGreen
-            saveButton.alignTextAndImage(spacing: 8, leftOffset: halfOfContentMargin, rightOffset: halfOfContentMargin)
-        }
-        
-        saveButton.snp.makeConstraints { (make) in
-            make.left.equalToSuperview().offset(halfOfContentMargin)
-            make.top.equalTo(bodyLbl.snp.bottom).offset(8)
-            make.height.equalTo(44)
-        }
-    }
-        
-    override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
-        contentView.snp.remakeConstraints { (make) in
-            make.width.equalTo(bounds.size.width)
-        }
-        return contentView.systemLayoutSizeFitting(CGSize(width: targetSize.width, height: 1))
     }
 }
-
 
 extension PostCell: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -171,11 +91,29 @@ extension PostCell: UITableViewDelegate, UITableViewDataSource {
 
 class PostImageCell: UITableViewCell {
     static let identifier = "PostImageCell"
-    let postImageView: UIImageView = UIImageView()
+    weak var postImageView: UIImageView!
+    weak var postBgImageView: UIImageView!
+    weak var errorView: UIView!
     
     func configure(urlString: String) {
         if let url = URL(string: urlString) {
-            postImageView.kf.setImage(with: url)
+            postImageView.kf.setImage(with: url, completionHandler:  {
+                [weak self] result in
+                guard let `self` = self else { return }
+                var imageFailedToLoad: Bool = false
+                
+                if case .failure = result {
+                    imageFailedToLoad = true
+                } else {
+                    let processor = BlurImageProcessor(blurRadius: 18)
+                    
+                    self.postBgImageView.kf.setImage(with: url, options: [.processor(processor)])
+                }
+                
+                self.postBgImageView.isHidden = imageFailedToLoad
+                self.postImageView.isHidden = imageFailedToLoad
+                self.errorView.isHidden = !imageFailedToLoad
+            })
         }
     }
     
@@ -189,10 +127,57 @@ class PostImageCell: UITableViewCell {
     }
     
     func setupViews() {
+        let postBgImageView = UIImageView()
+        contentView.addSubview(postBgImageView)
+        postBgImageView.contentMode = .scaleAspectFill
+        postBgImageView.snp.makeConstraints { (make) in
+            make.edges.equalToSuperview()
+        }
+        postBgImageView.layer.masksToBounds = true
+        postBgImageView.alpha = 0.7
+        
+        self.postBgImageView = postBgImageView
+        let postImageView = UIImageView()
         contentView.addSubview(postImageView)
+        postImageView.contentMode = .scaleAspectFit
         
         postImageView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
         }
+        self.postImageView = postImageView
+        
+        let errorImage = UIImageView(image: #imageLiteral(resourceName: "broken_image"))
+        errorImage.alpha = 0.6
+        let errorTitle = UILabel()
+        errorTitle.text = "Не удалось\nзагрузить изображение"
+        errorTitle.numberOfLines = 2
+        errorTitle.textAlignment = .center
+        let errorView  = UIView()
+        
+        errorView.addSubview(errorImage)
+        errorView.addSubview(errorTitle)
+        addSubview(errorView)
+        
+        errorView.isHidden = true
+        
+        errorView.snp.makeConstraints { (make) in
+            make.height.equalTo(300)
+            make.centerX.equalToSuperview()
+            make.centerY.equalToSuperview()
+        }
+        
+        errorImage.snp.makeConstraints { (make) in
+            make.height.equalTo(100)
+            make.width.equalTo(100)
+            make.centerX.equalToSuperview()
+            make.centerY.equalToSuperview().offset(-40)
+        }
+        errorTitle.snp.makeConstraints { (make) in
+            make.top.equalTo(errorImage.snp.bottom).offset(16)
+            make.centerX.equalToSuperview()
+        }
+        
+        
+        self.errorView = errorView
     }
 }

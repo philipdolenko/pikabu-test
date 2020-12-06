@@ -8,8 +8,15 @@
 
 import Foundation
 
+protocol PostSwitcher {
+    func switchSaveState(for post: Post)
+}
 
-public class FeedViewModel: PostSaveStateHandler {
+protocol PostCellDelegate: PostSwitcher {
+    func tappedOnPost(with id: Int)
+}
+
+public class FeedViewModel: PostCellDelegate {
     
     enum SectionType: Int, CaseIterable {
         case feed
@@ -25,15 +32,6 @@ public class FeedViewModel: PostSaveStateHandler {
         }
     }
     
-    func getPosts(for section: SectionType) -> [Post] {
-        switch section {
-        case .feed:
-            return posts.value
-        case .savedFeed:
-            return savedPosts.value
-        }
-    }
-    
     init(localStorageService: LocalStorageService, networkingService: NetworkingService) {
         self.localStorageService = localStorageService
         self.networkingService = networkingService
@@ -44,11 +42,51 @@ public class FeedViewModel: PostSaveStateHandler {
     
     let posts: Observable<[Post]> = Observable([])
     let savedPosts: Observable<[Post]> = Observable([])
+    let isLoading: Observable<Bool> = Observable(false)
+    
+    func getPosts(for section: SectionType) -> [Post] {
+        switch section {
+        case .feed:
+            return posts.value
+        case .savedFeed:
+            return savedPosts.value
+        }
+    }
+    
+    func viewDidLoad() {
+        savedPosts.value = localStorageService.getAllSavedPosts()
+        
+        isLoading.value = true
+        networkingService.fetchAllPosts { [weak self] (fetchedPosts, err) in
+            guard let `self` = self else { return }
+            
+            self.isLoading.value = false
+            
+            if let fetchedPosts = fetchedPosts {
+                self.processPostsFromServer(fetchedPosts)
+            }
+        }
+    }
+    
+    private func processPostsFromServer(_ fetchedPosts: [PostDTO]){
+        var posts = fetchedPosts.map({$0.map()})
+
+        for i in 0..<posts.count {
+            posts[i].isSaved = self.savedPosts.value.contains(where: {$0.id ==  posts[i].id})
+        }
+        
+        self.posts.value = posts
+    }
     
     func getSaveStatus(for post: Post) -> Bool {
         let index = savedPosts.value.first(where: {$0.id == post.id})
         
         return index != nil
+    }
+    
+    func tappedOnPost(with id: Int) {
+        print("tappedOnPost \(id)")
+        isLoading.value = !isLoading.value
     }
     
     func switchSaveState(for post: Post) {
@@ -68,27 +106,4 @@ public class FeedViewModel: PostSaveStateHandler {
         }
     }
     
-    func viewDidLoad() {
-        savedPosts.value = localStorageService.getAllSavedPosts()
-        
-        networkingService.fetchAllPosts { [weak self] (fetchedPosts, err) in
-            if let fetchedPosts = fetchedPosts {
-                guard let `self` = self else { return }
-                
-                self.processPostsFromServer(fetchedPosts)
-            }
-        }
-    }
-    
-    private func processPostsFromServer(_ fetchedPosts: [PostDTO]){
-        var posts = [Post]()
-        
-        for postDTO in fetchedPosts {
-            let isSaved = self.savedPosts.value.contains(where: {$0.id == postDTO.id})
-            
-            posts.append(postDTO.map(isSaved: isSaved))
-        }
-        
-        self.posts.value = posts
-    }
 }

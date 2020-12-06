@@ -10,11 +10,21 @@
 import UIKit
 import SnapKit
 
-class BarCell: BaseCell {
+class BarCell: UICollectionViewCell {
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.setupViews()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     
     static let identifier = "BarCell"
     
-    let tabLbl = UILabel()
+    weak var tabLbl: UILabel!
     
     override var isHighlighted: Bool {
         didSet {
@@ -28,9 +38,8 @@ class BarCell: BaseCell {
         }
     }
     
-    override func setupViews() {
-        super.setupViews()
-        
+    func setupViews() {
+        let tabLbl = UILabel()
         addSubview(tabLbl)
         
         tabLbl.textAlignment = .center
@@ -42,5 +51,6 @@ class BarCell: BaseCell {
             make.top.equalToSuperview().offset(6)
             make.height.equalTo(40)
         }
+        self.tabLbl = tabLbl
     }
 }

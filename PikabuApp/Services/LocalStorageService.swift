@@ -9,9 +9,6 @@
 import Foundation
 
 class LocalStorageService {
-    
-    static let shared = LocalStorageService()
-    
     let defaults = UserDefaults.standard
     
     private let savedPostsKey = "savedPostsKey"
