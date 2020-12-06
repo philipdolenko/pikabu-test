@@ -18,12 +18,20 @@ public class FeedCell: BaseCell, UICollectionViewDataSource, UICollectionViewDel
     var posts: [Post] = []
     var postSaver: PostSaveStateHandler? = nil
     
-    var collectionViewOffset: CGFloat {
-        set { collectionView.contentOffset.y = newValue }
-        get { return collectionView.contentOffset.y }
+    var collectionViewOffset: CGPoint {
+        set { collectionView.contentOffset = newValue }
+        get { return collectionView.contentOffset }
     }
     
-    func configure(with posts: [Post], postSaver: PostSaveStateHandler, scrollOffset: CGFloat) {
+    public override func layoutIfNeeded() { 
+        guard window != nil else {
+            return
+        }
+
+        super.layoutIfNeeded()
+    }
+    
+    func configure(with posts: [Post], postSaver: PostSaveStateHandler, scrollOffset: CGPoint) {
         self.posts = posts
         self.postSaver = postSaver
         
@@ -32,7 +40,7 @@ public class FeedCell: BaseCell, UICollectionViewDataSource, UICollectionViewDel
         self.adoptLayoutIfNeeded()
     }
     
-    func setScrollOffset(_ scrollOffset: CGFloat){
+    func setScrollOffset(_ scrollOffset: CGPoint){
         self.layoutIfNeeded()
         
         let contentHeight = collectionView.contentSize.height
@@ -40,7 +48,7 @@ public class FeedCell: BaseCell, UICollectionViewDataSource, UICollectionViewDel
         
         let isScrollable = contentHeight >= visibleHeight
         
-        collectionViewOffset = isScrollable ? scrollOffset : 0
+        collectionViewOffset = isScrollable ? scrollOffset : .init(x: 0, y: 0)
     }
     
     func adoptLayoutIfNeeded(){

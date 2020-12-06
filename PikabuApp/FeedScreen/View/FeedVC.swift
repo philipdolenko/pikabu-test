@@ -15,7 +15,7 @@ class FeedVC: UIViewController {
     weak var topBar: TopBar!
     weak var navigationCollectionView: UICollectionView!
     
-    private var storedOffsets = [Int: CGFloat]()
+    private var storedOffsets = [Int: CGPoint]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,7 +69,9 @@ extension FeedVC: UICollectionViewDataSource, UICollectionViewDelegate, UICollec
         guard let section = FeedViewModel.SectionType.init(rawValue: indexPath.row) else { return UICollectionViewCell() }
         
         let posts = viewModel.getPosts(for: section)
-        let offset = storedOffsets[indexPath.row] ?? 0
+        let offset = storedOffsets[indexPath.row] ?? .init(x: 0, y: 0)
+        
+        print(indexPath.row)
         
         cell.configure(with: posts, postSaver: viewModel, scrollOffset: offset)
         
@@ -83,7 +85,7 @@ extension FeedVC: UICollectionViewDataSource, UICollectionViewDelegate, UICollec
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard let feedCell = cell as? FeedCell else { return }
-        let offset = storedOffsets[indexPath.row] ?? 0
+        let offset = storedOffsets[indexPath.row] ?? .init(x: 0, y: 0)
         feedCell.setScrollOffset(offset)
     }
     

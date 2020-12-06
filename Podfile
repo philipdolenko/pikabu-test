@@ -4,4 +4,5 @@ use_frameworks!
 
 target 'PikabuApp' do  
   pod 'SnapKit', '~> 5.0.0'
+  pod 'Kingfisher', '~> 5.15'
 end
