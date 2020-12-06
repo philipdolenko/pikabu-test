@@ -17,11 +17,6 @@ class BarCell: UICollectionViewCell {
         self.setupViews()
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    
     static let identifier = "BarCell"
     
     weak var tabLbl: UILabel!
@@ -52,5 +47,10 @@ class BarCell: UICollectionViewCell {
             make.height.equalTo(40)
         }
         self.tabLbl = tabLbl
+    }
+    
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

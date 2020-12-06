@@ -19,10 +19,6 @@ public class FeedCell: UICollectionViewCell, UICollectionViewDataSource, UIColle
         self.setUpView()
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     weak var collectionView: UICollectionView!
     var posts: [Post] = []
     var postSaver: PostCellDelegate? = nil
@@ -110,6 +106,12 @@ public class FeedCell: UICollectionViewCell, UICollectionViewDataSource, UIColle
             cell.configure(with: self.posts[indexPath.row], and: postSaver)
         }
         return cell
+    }
+    
+    
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 

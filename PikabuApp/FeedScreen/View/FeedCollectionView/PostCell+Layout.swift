@@ -72,12 +72,12 @@ extension PostCell {
         imageTableView.showsHorizontalScrollIndicator = false
         imageTableView.separatorStyle = .none
         imageTableView.allowsSelection = false
-        imageTableView.rowHeight = imageTableHeight
+        imageTableView.rowHeight = imgTableRowHeight
         imageTableView.snp.makeConstraints { (make) in
             make.top.equalTo(titleLbl.snp.bottom).offset(8)
             make.left.equalToSuperview().offset(contentMargin)
             make.right.equalToSuperview().offset(-contentMargin)
-            make.height.equalTo(imageTableHeight)
+            make.height.equalTo(imgTableRowHeight)
         }
         
         self.imageTableView = imageTableView

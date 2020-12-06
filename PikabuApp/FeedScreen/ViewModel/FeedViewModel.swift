@@ -8,11 +8,11 @@
 
 import Foundation
 
-protocol PostSwitcher {
+protocol PostSaveStateDelegate {
     func switchSaveState(for post: Post)
 }
 
-protocol PostCellDelegate: PostSwitcher {
+protocol PostCellDelegate: PostSaveStateDelegate {
     func tappedOnPost(with id: Int)
 }
 

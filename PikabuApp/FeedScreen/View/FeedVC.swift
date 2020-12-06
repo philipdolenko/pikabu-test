@@ -45,7 +45,7 @@ class FeedVC: UIViewController {
             self.updateSection(.savedFeed)
         }
         viewModel.isLoading.observe { [unowned self]  (loading) in
-            updateIndicator(loading)
+            self.updateIndicator(loading)
         }
     }
     
