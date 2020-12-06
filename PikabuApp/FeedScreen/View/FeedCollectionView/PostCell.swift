@@ -18,8 +18,8 @@ class PostCell: BaseCell {
     let titleLbl =  UILabel()
     let bodyLbl = UILabel()
     let saveButton = UIButton()
-    let safeContentView = UIView()
     
+
     private let contentMargin: CGFloat = 16
     private lazy var halfOfContentMargin = self.contentMargin / 2.0
     
@@ -44,10 +44,7 @@ class PostCell: BaseCell {
     
     override func setupViews() {
         contentView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(safeContentView)
-        safeContentView.snp.makeConstraints { (make) in
-            make.edges.equalToSuperview()
-        }
+        
         setUpLabels()
         setUpSaveButton()
         
@@ -60,9 +57,9 @@ class PostCell: BaseCell {
         setUpLabel(label: titleLbl, with: .systemFont(ofSize: 24, weight: .bold))
         
         titleLbl.snp.makeConstraints { (make) in
-            make.left.equalTo(safeContentView.snp.left).offset(contentMargin)
-            make.right.equalTo(safeContentView.snp.right).offset(-contentMargin)
-            make.top.equalTo(safeContentView.snp.top).offset(12)
+            make.left.equalTo(contentView.snp.left).offset(contentMargin)
+            make.right.equalTo(contentView.snp.right).offset(-contentMargin)
+            make.top.equalTo(contentView.snp.top).offset(12)
         }
         
         setUpLabel(label: bodyLbl, with: .systemFont(ofSize: 16))
@@ -105,14 +102,14 @@ class PostCell: BaseCell {
         }
         
         saveButton.snp.makeConstraints { (make) in
-            make.left.equalTo(safeContentView.snp.left).offset(halfOfContentMargin)
+            make.left.equalTo(contentView.snp.left).offset(halfOfContentMargin)
             make.top.equalTo(bodyLbl.snp.bottom).offset(8)
             make.height.equalTo(44)
         }
     }
     
     override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
-        contentView.snp.updateConstraints { (make) in
+        contentView.snp.remakeConstraints { (make) in
             make.width.equalTo(bounds.size.width)
         }
         return contentView.systemLayoutSizeFitting(CGSize(width: targetSize.width, height: 1))
