@@ -48,9 +48,10 @@ class FeedVC: UIViewController {
         let sectionIndex = section.rawValue
         let indexToUpdate = IndexPath(row: sectionIndex, section: 0)
         
-        guard let cell = self.navigationCollectionView.cellForItem(at: indexToUpdate) as? FeedCell else { return }
-        
-        self.storedOffsets[sectionIndex] = cell.collectionViewOffset
+        if let cell = self.navigationCollectionView.cellForItem(at: indexToUpdate) as? FeedCell {
+            let offset = cell.collectionViewOffset
+            self.storedOffsets[sectionIndex] = offset
+        }
         
         self.navigationCollectionView.reloadItems(at: [indexToUpdate])
     }
@@ -77,6 +78,19 @@ extension FeedVC: UICollectionViewDataSource, UICollectionViewDelegate, UICollec
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        guard let feedCell = cell as? FeedCell else { return }
+        let offset = storedOffsets[indexPath.row] ?? 0
+        feedCell.setScrollOffset(offset)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        guard let feedCell = cell as? FeedCell else { return }
+        let offset = feedCell.collectionViewOffset
+        storedOffsets[indexPath.row] = offset
     }
 }
 

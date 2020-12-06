@@ -20,7 +20,7 @@ public class FeedCell: BaseCell, UICollectionViewDataSource, UICollectionViewDel
     
     var collectionViewOffset: CGFloat {
         set { collectionView.contentOffset.y = newValue }
-        get { collectionView.contentOffset.y }
+        get { return collectionView.contentOffset.y }
     }
     
     func configure(with posts: [Post], postSaver: PostSaveStateHandler, scrollOffset: CGFloat) {
@@ -28,12 +28,36 @@ public class FeedCell: BaseCell, UICollectionViewDataSource, UICollectionViewDel
         self.postSaver = postSaver
         
         self.collectionView.reloadData()
+        self.setScrollOffset(scrollOffset)
+        self.adoptLayoutIfNeeded()
+    }
+    
+    func setScrollOffset(_ scrollOffset: CGFloat){
         self.layoutIfNeeded()
-        collectionViewOffset = scrollOffset
         
+        let contentHeight = collectionView.contentSize.height
+        
+        let window = UIApplication.shared.windows.first { $0.isKeyWindow }
+        let bottomPadding = window?.safeAreaInsets.bottom ?? 0
+        
+        let visibleHeight = collectionView.bounds.height + collectionView.contentInset.bottom + bottomPadding
+        
+        let isScrollable = contentHeight >= visibleHeight
+        
+        collectionViewOffset = isScrollable ? scrollOffset : 0
+    }
+    
+    func adoptLayoutIfNeeded(){
         if let layout  = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            let width = UIScreen.main.bounds.size.width
-            layout.estimatedItemSize = CGSize(width: width, height: 10)
+            var width = UIScreen.main.bounds.size.width
+            let window = UIApplication.shared.windows.first { $0.isKeyWindow }
+            
+            width -= window?.safeAreaInsets.left ?? 0
+            width -= window?.safeAreaInsets.right ?? 0
+            
+            if layout.estimatedItemSize.width != width {
+                layout.estimatedItemSize.width = width
+            }
         }
     }
     
