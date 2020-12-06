@@ -34,8 +34,13 @@ extension FeedVC {
 
         collectionView.snp.makeConstraints { (make) in
             make.top.equalTo(topBar.snp.bottom)
-            make.left.equalToSuperview()
-            make.right.equalToSuperview()
+            if #available(iOS 11, *) {
+                make.left.equalTo(view.safeAreaLayoutGuide.snp.left)
+                make.right.equalTo(view.safeAreaLayoutGuide.snp.right)
+            } else {
+                make.left.equalToSuperview()
+                make.right.equalToSuperview()
+            }
             make.bottom.equalToSuperview()
         }
 

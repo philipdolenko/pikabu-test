@@ -71,7 +71,6 @@ extension FeedVC: UICollectionViewDataSource, UICollectionViewDelegate, UICollec
         let posts = viewModel.getPosts(for: section)
         let offset = storedOffsets[indexPath.row] ?? .init(x: 0, y: 0)
         
-        print(indexPath.row)
         
         cell.configure(with: posts, postSaver: viewModel, scrollOffset: offset)
         
@@ -103,7 +102,7 @@ extension FeedVC : TopBarListener  {
         navigationCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        topBar.moveIndicator(scrollView.contentOffset.x)
+        topBar.moveIndicator(scrollView.contentOffset.x / scrollView.frame.width)
     }
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {

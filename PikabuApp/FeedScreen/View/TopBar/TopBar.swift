@@ -20,6 +20,8 @@ class TopBar: UIView {
     private var selectedTabIndicator: UIView!
     private var listener: TopBarListener?
     
+    private let contentView = UIView()
+    
     func configure(tabsNames: [String], listener: TopBarListener? = nil, selectedItem: Int = 0){
         self.tabsNames = tabsNames
         self.listener = listener
@@ -34,6 +36,21 @@ class TopBar: UIView {
         
         setupColletionView(with: selectedItem)
         setupSelectedTabIndicator()
+    }
+    
+    func setUpContentView(){
+        addSubview(contentView)
+        contentView.snp.makeConstraints { (make) in
+            if #available(iOS 11, *) {
+                make.left.equalTo(safeAreaLayoutGuide.snp.left)
+                make.right.equalTo(safeAreaLayoutGuide.snp.right)
+            } else {
+                make.left.equalToSuperview()
+                make.right.equalToSuperview()
+            }
+            make.top.equalToSuperview()
+            make.bottom.equalToSuperview()
+        }
     }
     
     func invalidateLayout(){
@@ -83,8 +100,14 @@ class TopBar: UIView {
     }
     
     func moveIndicator(_ x: CGFloat){
+        let window = UIApplication.shared.windows.first { $0.isKeyWindow }
+        
+        let padding = window?.safeAreaInsets.left ?? 0
+        
+        
+        
         selectedTabIndicator.snp.updateConstraints { (make) in
-            make.left.equalToSuperview().offset(x / CGFloat(tabsSize))
+            make.left.equalToSuperview().offset((collectionView.frame.width * x) / CGFloat(tabsSize))
         }
     }
     
