@@ -47,7 +47,9 @@ class PostCell: BaseCell {
         imageTableView.isHidden = hideImages
         imageTableView.snp.updateConstraints { (make) in
             make.top.equalTo(titleLbl.snp.bottom).offset(hideImages ? 0: 8)
-            make.height.equalTo(hideImages ? 0 : imageTableHeight)
+            let y: CGFloat = CGFloat((post.images?.count ?? 1))
+            let x:CGFloat = imageTableHeight * y
+            make.height.equalTo(hideImages ? 0 : x)
         }
     }
     
