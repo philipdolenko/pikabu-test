@@ -36,11 +36,7 @@ public class FeedCell: BaseCell, UICollectionViewDataSource, UICollectionViewDel
         self.layoutIfNeeded()
         
         let contentHeight = collectionView.contentSize.height
-        
-        let window = UIApplication.shared.windows.first { $0.isKeyWindow }
-        let bottomPadding = window?.safeAreaInsets.bottom ?? 0
-        
-        let visibleHeight = collectionView.bounds.height + collectionView.contentInset.bottom + bottomPadding
+        let visibleHeight = collectionView.bounds.height + collectionView.contentInset.bottom
         
         let isScrollable = contentHeight >= visibleHeight
         

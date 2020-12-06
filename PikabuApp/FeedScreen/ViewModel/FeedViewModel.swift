@@ -52,22 +52,18 @@ public class FeedViewModel: PostSaveStateHandler {
     }
     
     func switchSaveState(for post: Post) {
-        let oldIsSavedState = post.isSaved
-        
         var updatedPost = post
-        updatedPost.isSaved = !oldIsSavedState
+        updatedPost.isSaved = !post.isSaved
         
-        if oldIsSavedState {
-            savedPosts.value.removeAll(where: {$0.id == updatedPost.id})
+        if let index = savedPosts.value.firstIndex(where: {$0.id == updatedPost.id}) {
+            savedPosts.value[index] = updatedPost
         } else {
             savedPosts.value.append(updatedPost)
         }
         
-        localStorageService.savePosts(posts: savedPosts.value)
+        localStorageService.savePosts(posts: savedPosts.value.filter({$0.isSaved}))
         
-        let index = posts.value.firstIndex(where: {$0.id == updatedPost.id})
-        
-        if let index = index {
+        if let index = posts.value.firstIndex(where: {$0.id == updatedPost.id}) {
             posts.value[index] = updatedPost
         }
     }

@@ -30,11 +30,11 @@ class PostCell: BaseCell {
         self.post = post
         self.postSaver = postSaver
         
-        
         titleLbl.text = post.title
         bodyLbl.text = post.body ?? ""
-        
         saveButton.imageView?.tintColor = post.isSaved ? .deepGreen : .gray
+        let buttonTitle = post.isSaved ? "Убрать из сохраненного" : "Сохранить"
+        saveButton.setTitle(buttonTitle, for: .normal)
         
         let shouldHaveTopOffset = post.body != nil && post.body != ""
         bodyLbl.snp.updateConstraints { (make) in
