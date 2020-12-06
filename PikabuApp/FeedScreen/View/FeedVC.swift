@@ -13,7 +13,9 @@ class FeedVC: UIViewController {
     var viewModel: FeedViewModel!
     
     weak var topBar: TopBar!
-    weak var collectionView: UICollectionView!
+    weak var navigationCollectionView: UICollectionView!
+    
+    private var storedOffsets = [Int: CGFloat]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,73 +29,34 @@ class FeedVC: UIViewController {
         )
     }
     
+    private func configureCollectionView() {
+        navigationCollectionView.register(FeedCell.self, forCellWithReuseIdentifier: FeedCell.identifier)
+        navigationCollectionView.dataSource = self
+        navigationCollectionView.delegate = self
+    }
+    
     private func subscribeToViewModelChanges(){
         viewModel.posts.observe { [unowned self] (posts) in
-            let feedIndex = FeedViewModel.SectionType.feed.rawValue
-            let indexToUpdate = IndexPath(row: feedIndex, section: 0)
-            
-            guard let collectionViewCell = self.collectionView.cellForItem(at: indexToUpdate) as? FeedCell else { return }
-            
-            self.storedOffsets[indexToUpdate.row] = collectionViewCell.collectionViewOffset
-            
-            self.collectionView.reloadItems(at: [indexToUpdate])
+            self.updateSection(.feed)
         }
         viewModel.savedPosts.observe { [unowned self] (posts) in
-            let savedFeedIndex = FeedViewModel.SectionType.savedFeed.rawValue
-            let indexToUpdate = IndexPath(row: savedFeedIndex, section: 0)
-            
-            guard let collectionViewCell = self.collectionView.cellForItem(at: indexToUpdate) as? FeedCell else { return }
-            
-            self.storedOffsets[indexToUpdate.row] = collectionViewCell.collectionViewOffset
-            
-            self.collectionView.reloadItems(at: [indexToUpdate])
+            self.updateSection(.savedFeed)
         }
     }
     
-    private func configureCollectionView() {
-        collectionView.register(FeedCell.self, forCellWithReuseIdentifier: FeedCell.identifier)
-        collectionView.dataSource = self
-        collectionView.delegate = self
-    }
-    
-    var storedOffsets = [Int: CGFloat]()
-}
-
-extension FeedVC {
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
+    private func updateSection(_ section: FeedViewModel.SectionType) {
+        let sectionIndex = section.rawValue
+        let indexToUpdate = IndexPath(row: sectionIndex, section: 0)
         
-        guard let collectionView = collectionView else { return }
-        let offset = collectionView.contentOffset
-        let width = collectionView.bounds.size.width
-
-        let index = round(offset.x / width)
-        let newOffset = CGPoint(x: index * size.width, y: offset.y)
-
-        coordinator.animate(alongsideTransition: { (context) in
-            collectionView.reloadData()
-            collectionView.setContentOffset(newOffset, animated: false)
-        }, completion: nil)
+        guard let cell = self.navigationCollectionView.cellForItem(at: indexToUpdate) as? FeedCell else { return }
         
-        topBar.invalidateLayout()
+        self.storedOffsets[sectionIndex] = cell.collectionViewOffset
+        
+        self.navigationCollectionView.reloadItems(at: [indexToUpdate])
     }
 }
 
-extension FeedVC : TopBarListener, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout  {
-    
-    func scrollToBarIndex(index: Int) {
-        let indexPath = IndexPath(item: index, section: 0)
-        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-    }
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        topBar.moveIndicator(scrollView.contentOffset.x)
-    }
-    
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        let index = Int(targetContentOffset.pointee.x / view.frame.width)
-        topBar.selectItem(index)
-    }
+extension FeedVC: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         FeedViewModel.SectionType.allCases.count
@@ -114,6 +77,48 @@ extension FeedVC : TopBarListener, UICollectionViewDataSource, UICollectionViewD
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
+    }
+}
+
+extension FeedVC : TopBarListener  {
+    
+    func scrollToBarIndex(index: Int) {
+        let indexPath = IndexPath(item: index, section: 0)
+        navigationCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+    }
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        topBar.moveIndicator(scrollView.contentOffset.x)
+    }
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        let index = Int(targetContentOffset.pointee.x / view.frame.width)
+        topBar.selectItem(index)
+    }
+    
+}
+
+extension FeedVC {
+    
+    // adapt layout after orientation change
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        
+        guard let collectionView = navigationCollectionView else { return }
+        let offset = collectionView.contentOffset
+        let width = collectionView.bounds.size.width
+
+        let index = round(offset.x / width)
+        let newOffset = CGPoint(x: index * size.width, y: offset.y)
+
+        collectionView.isHidden = true
+        coordinator.animate(alongsideTransition: { (context) in
+            collectionView.reloadData()
+            collectionView.setContentOffset(newOffset, animated: false)
+        }, completion: { _ in
+            collectionView.isHidden = false
+        })
+        
+        topBar.invalidateLayout()
     }
 }
 

@@ -14,6 +14,8 @@ extension FeedVC {
     func setUpView(){
         createTopBar()
         createCollectionView()
+        
+        view.backgroundColor = .white
     }
     
     func createCollectionView(){
@@ -37,7 +39,7 @@ extension FeedVC {
             make.bottom.equalToSuperview()
         }
 
-        self.collectionView = collectionView
+        self.navigationCollectionView = collectionView
     }
     
     func createTopBar(){

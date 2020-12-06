@@ -208,8 +208,8 @@
 		D4937E24257865AA0073971B /* View */ = {
 			isa = PBXGroup;
 			children = (
-				D44FC0C5257A6D85008AD62C /* FeedCollectionView */,
 				D4937E13257840AC0073971B /* TopBar */,
+				D44FC0C5257A6D85008AD62C /* FeedCollectionView */,
 				D4937DFB2577B6A30073971B /* FeedVC.swift */,
 				D4937E0F25780E750073971B /* FeedVC+Layout.swift */,
 			);

@@ -14,26 +14,13 @@ public class FeedCell: BaseCell, UICollectionViewDataSource, UICollectionViewDel
     
     static let identifier = "FeedCell"
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError()
-    }
-    
     weak var collectionView: UICollectionView!
     var posts: [Post] = []
     var postSaver: PostSaveStateHandler? = nil
     
     var collectionViewOffset: CGFloat {
-        set {
-            collectionView.contentOffset.y = newValue
-        }
-        
-        get {
-            return collectionView.contentOffset.y
-        }
+        set { collectionView.contentOffset.y = newValue }
+        get { collectionView.contentOffset.y }
     }
     
     func configure(with posts: [Post], postSaver: PostSaveStateHandler, scrollOffset: CGFloat) {
@@ -43,6 +30,11 @@ public class FeedCell: BaseCell, UICollectionViewDataSource, UICollectionViewDel
         self.collectionView.reloadData()
         self.layoutIfNeeded()
         collectionViewOffset = scrollOffset
+        
+        if let layout  = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            let width = UIScreen.main.bounds.size.width
+            layout.estimatedItemSize = CGSize(width: width, height: 10)
+        }
     }
     
     override func setupViews() {
