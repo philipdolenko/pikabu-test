@@ -20,6 +20,8 @@ public class FeedCell: UICollectionViewCell, UICollectionViewDataSource, UIColle
     }
     
     weak var collectionView: UICollectionView!
+    weak var messageLbl: UILabel!
+    weak var messageImg: UIImageView!
     var posts: [Post] = []
     var postSaver: PostCellDelegate? = nil
     
@@ -36,13 +38,28 @@ public class FeedCell: UICollectionViewCell, UICollectionViewDataSource, UIColle
         super.layoutIfNeeded()
     }
     
-    func configure(with posts: [Post], postSaver: PostCellDelegate, scrollOffset: CGPoint) {
+    func configure(with posts: [Post], postSaver: PostCellDelegate, scrollOffset: CGPoint, _ sectionType: FeedViewModel.SectionType) {
         self.posts = posts
         self.postSaver = postSaver
         
         self.collectionView.reloadData()
         self.setScrollOffset(scrollOffset)
         self.adoptLayoutIfNeeded()
+        
+        configureEmptyContentMsg(sectionType)
+    }
+    
+    func configureEmptyContentMsg(_ sectionType: FeedViewModel.SectionType){
+        messageLbl.isHidden = !posts.isEmpty
+        messageImg.isHidden = !posts.isEmpty
+        
+        if let image = sectionType.emptyContentImg {
+            messageImg.image = image.withRenderingMode(.alwaysTemplate)
+        } else {
+            messageImg.isHidden = true
+        }
+        messageLbl.text = sectionType.emptyContentMessege
+        messageImg.tintColor = .deepGreen
     }
     
     func setScrollOffset(_ scrollOffset: CGPoint){
@@ -94,6 +111,26 @@ public class FeedCell: UICollectionViewCell, UICollectionViewDataSource, UIColle
         collectionView.dataSource = self
         
         self.collectionView = collectionView
+        
+        let messageLbl = UILabel()
+        contentView.addSubview(messageLbl)
+        messageLbl.snp.makeConstraints { (make) in
+            make.centerX.equalToSuperview()
+            make.centerY.equalToSuperview()
+        }
+        self.messageLbl = messageLbl
+        
+        let messageImg = UIImageView()
+        messageImg.alpha = 0.8
+        contentView.addSubview(messageImg)
+        messageImg.contentMode = .scaleAspectFit
+        messageImg.snp.makeConstraints { (make) in
+            make.centerX.equalTo(messageLbl)
+            make.width.equalTo(75)
+            make.height.equalTo(75)
+            make.bottom.equalTo(messageLbl.snp.top).offset(-16)
+        }
+        self.messageImg = messageImg
     }
     
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

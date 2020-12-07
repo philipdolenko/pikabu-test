@@ -6,7 +6,7 @@
 //  Copyright © 2020 Philip Dolenko. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 protocol PostSaveStateDelegate {
     func switchSaveState(for post: Post)
@@ -28,6 +28,32 @@ public class FeedViewModel: PostCellDelegate {
                 return "Лента"
             case .savedFeed:
                 return "Сохраненные"
+            }
+        }
+
+        var emptyContentMessege: String {
+            switch self {
+            case .feed:
+                if InternetConnectionManager.isConnectedToNetwork() {
+                    return ""
+                } else {
+                    return "Ошибка соединения."
+                }
+            case .savedFeed:
+                return "Нет сохраненных постов."
+            }
+        }
+        
+        var emptyContentImg: UIImage? {
+            switch self {
+            case .feed:
+                if InternetConnectionManager.isConnectedToNetwork() {
+                    return nil
+                } else {
+                    return #imageLiteral(resourceName: "cloud_off")
+                }
+            case .savedFeed:
+                return #imageLiteral(resourceName: "save_alt")
             }
         }
     }
@@ -56,7 +82,10 @@ public class FeedViewModel: PostCellDelegate {
     
     func viewDidLoad() {
         savedPosts.value = localStorageService.getAllSavedPosts()
-        
+        fetchPosts()
+    }
+    
+    private func fetchPosts(){
         isLoading.value = true
         networkingService.fetchAllPosts { [weak self] (fetchedPosts, err) in
             guard let `self` = self else { return }

@@ -48,23 +48,10 @@ class FeedVC: UIViewController {
             self.updateIndicator(loading)
         }
         viewModel.postToDisplay.observe { [unowned self] (viewModel) in
-            let vc = PostScreenVC()
-            vc.viewModel = viewModel
-            
-            let navController = UINavigationController(rootViewController: vc)
-            navController.modalPresentationStyle = .overCurrentContext
-            
-            self.present(navController, animated:true, completion: nil)
+            if let viewModel = viewModel {
+                 self.presentPostScreen(with: viewModel)
+            }
         }
-    }
-    
-    func updateIndicator(_ loading: Bool){
-        if loading {
-            indicator.startAnimating()
-        } else {
-            indicator.stopAnimating()
-        }
-        UIApplication.shared.isNetworkActivityIndicatorVisible = loading
     }
     
     private func updateSection(_ section: FeedViewModel.SectionType) {
@@ -77,6 +64,25 @@ class FeedVC: UIViewController {
         }
         
         self.navigationCollectionView.reloadItems(at: [indexToUpdate])
+    }
+    
+    private func updateIndicator(_ loading: Bool){
+        if loading {
+            indicator.startAnimating()
+        } else {
+            indicator.stopAnimating()
+        }
+        UIApplication.shared.isNetworkActivityIndicatorVisible = loading
+    }
+    
+    private func presentPostScreen(with viewModel: PostScreenViewModel){
+        let vc = PostScreenVC()
+        vc.viewModel = viewModel
+        
+        let navController = UINavigationController(rootViewController: vc)
+        navController.modalPresentationStyle = .overCurrentContext
+        
+        self.present(navController, animated:true, completion: nil)
     }
 }
 
@@ -94,8 +100,7 @@ extension FeedVC: UICollectionViewDataSource, UICollectionViewDelegate, UICollec
         let posts = viewModel.getPosts(for: section)
         let offset = storedOffsets[indexPath.row] ?? .init(x: 0, y: 0)
         
-        
-        cell.configure(with: posts, postSaver: viewModel, scrollOffset: offset)
+        cell.configure(with: posts, postSaver: viewModel, scrollOffset: offset, section)
         
         return cell
     }

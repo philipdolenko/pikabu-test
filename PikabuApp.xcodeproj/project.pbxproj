@@ -33,6 +33,7 @@
 		D4C75EFD257D948E0056F3DC /* SaveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C75EFC257D948E0056F3DC /* SaveButton.swift */; };
 		D4C75EFF257D9B280056F3DC /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C75EFE257D9B280056F3DC /* UILabel+Extension.swift */; };
 		D4C75F01257DBB920056F3DC /* FullContentTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C75F00257DBB920056F3DC /* FullContentTableView.swift */; };
+		D4C75F03257DD7F50056F3DC /* InternetConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C75F02257DD7F50056F3DC /* InternetConnectionManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +78,7 @@
 		D4C75EFC257D948E0056F3DC /* SaveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveButton.swift; sourceTree = "<group>"; };
 		D4C75EFE257D9B280056F3DC /* UILabel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extension.swift"; sourceTree = "<group>"; };
 		D4C75F00257DBB920056F3DC /* FullContentTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullContentTableView.swift; sourceTree = "<group>"; };
+		D4C75F02257DD7F50056F3DC /* InternetConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetConnectionManager.swift; sourceTree = "<group>"; };
 		E5EC0E72B5B57639528B7497 /* Pods-PikabuApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PikabuApp.debug.xcconfig"; path = "Target Support Files/Pods-PikabuApp/Pods-PikabuApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -258,6 +260,7 @@
 				D4937E2E257873270073971B /* Observable.swift */,
 				D492F5EF257BEF81001FB222 /* Extensions */,
 				D492F5EA257BC510001FB222 /* Colors.swift */,
+				D4C75F02257DD7F50056F3DC /* InternetConnectionManager.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -464,6 +467,7 @@
 				D4C75F01257DBB920056F3DC /* FullContentTableView.swift in Sources */,
 				D492F5F1257BEF82001FB222 /* UIButton+Extension.swift in Sources */,
 				D4937E12257815D90073971B /* TopBar.swift in Sources */,
+				D4C75F03257DD7F50056F3DC /* InternetConnectionManager.swift in Sources */,
 				D4C75EFD257D948E0056F3DC /* SaveButton.swift in Sources */,
 				D4937E26257865DA0073971B /* Post.swift in Sources */,
 				D4937DF82577B6A30073971B /* AppDelegate.swift in Sources */,
