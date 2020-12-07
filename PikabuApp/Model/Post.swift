@@ -11,7 +11,7 @@ import Foundation
 public struct Post: Codable {
     let id: Int
     let title: String
-    let images: [String]?
+    var images: [String]?
     let body: String?
     var isSaved: Bool
 }

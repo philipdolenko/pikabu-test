@@ -42,6 +42,7 @@ public class FeedViewModel: PostCellDelegate {
     
     let posts: Observable<[Post]> = Observable([])
     let savedPosts: Observable<[Post]> = Observable([])
+    let postToDisplay: Observable<PostScreenViewModel?> = Observable(nil)
     let isLoading: Observable<Bool> = Observable(false)
     
     func getPosts(for section: SectionType) -> [Post] {
@@ -72,21 +73,10 @@ public class FeedViewModel: PostCellDelegate {
         var posts = fetchedPosts.map({$0.map()})
 
         for i in 0..<posts.count {
-            posts[i].isSaved = self.savedPosts.value.contains(where: {$0.id ==  posts[i].id})
+            posts[i].isSaved = getSaveStatus(for: posts[i])
         }
         
         self.posts.value = posts
-    }
-    
-    func getSaveStatus(for post: Post) -> Bool {
-        let index = savedPosts.value.first(where: {$0.id == post.id})
-        
-        return index != nil
-    }
-    
-    func tappedOnPost(with id: Int) {
-        print("tappedOnPost \(id)")
-        isLoading.value = !isLoading.value
     }
     
     func switchSaveState(for post: Post) {
@@ -106,4 +96,25 @@ public class FeedViewModel: PostCellDelegate {
         }
     }
     
+    func tappedOnPost(with id: Int) {
+        isLoading.value = true
+        
+        networkingService.fetchPost(by: id) {[weak self] (postDTO, err) in
+            guard let `self` = self else { return }
+            
+            self.isLoading.value = false
+            
+            if let postDTO = postDTO {
+                var post = postDTO.map()
+                post.isSaved = self.getSaveStatus(for: post)
+                
+                let viewModel = PostScreenViewModel.init(postSaveStateDelegate: self, post: post)
+                self.postToDisplay.value = viewModel
+            }
+        }
+    }
+    
+    func getSaveStatus(for post: Post) -> Bool {
+        self.savedPosts.value.contains(where: {($0.id ==  post.id) && $0.isSaved})
+    }
 }

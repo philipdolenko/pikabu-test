@@ -56,7 +56,7 @@ public final class Observable<Value> {
         }
     }
     
-    private func notifyObservers() {
+    func notifyObservers() {
         observers.values.forEach { $0(value) }
     }
 }

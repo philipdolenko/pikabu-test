@@ -44,8 +44,17 @@ class FeedVC: UIViewController {
         viewModel.savedPosts.observe { [unowned self] (_) in
             self.updateSection(.savedFeed)
         }
-        viewModel.isLoading.observe { [unowned self]  (loading) in
+        viewModel.isLoading.observe { [unowned self] (loading) in
             self.updateIndicator(loading)
+        }
+        viewModel.postToDisplay.observe { [unowned self] (viewModel) in
+            let vc = PostScreenVC()
+            vc.viewModel = viewModel
+            
+            let navController = UINavigationController(rootViewController: vc)
+            navController.modalPresentationStyle = .overCurrentContext
+            
+            self.present(navController, animated:true, completion: nil)
         }
     }
     

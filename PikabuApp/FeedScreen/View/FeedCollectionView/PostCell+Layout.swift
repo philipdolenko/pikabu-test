@@ -26,7 +26,7 @@ extension PostCell {
     
     private func setUpTitleLbl(){
         let titleLbl = UILabel()
-        setUpLabel(label: titleLbl, with: .systemFont(ofSize: 24, weight: .bold))
+        titleLbl.setUpLabel(with: .systemFont(ofSize: 24, weight: .bold), parent: contentView)
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(didTitleClick))
         titleLbl.isUserInteractionEnabled = true
@@ -43,7 +43,7 @@ extension PostCell {
     
     private func setUpBodyLbl(){
         let bodyLbl = UILabel()
-        setUpLabel(label: bodyLbl, with: .systemFont(ofSize: 16))
+        bodyLbl.setUpLabel(with: .systemFont(ofSize: 16), parent: contentView)
         
         bodyLbl.snp.makeConstraints { (make) in
             make.left.equalTo(titleLbl.snp.left)
@@ -54,24 +54,15 @@ extension PostCell {
         self.bodyLbl = bodyLbl
     }
     
-    private func setUpLabel(label: UILabel, with font: UIFont) {
-        label.numberOfLines = 0
-        label.font = font
-        label.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(label)
-    }
-    
     private func setUpImageTableView(){
         let imageTableView = UITableView()
         contentView.addSubview(imageTableView)
-        imageTableView.isScrollEnabled = false
         imageTableView.register(PostImageCell.self, forCellReuseIdentifier: PostImageCell.identifier)
         imageTableView.delegate = self
         imageTableView.dataSource = self
-        imageTableView.showsVerticalScrollIndicator = false
-        imageTableView.showsHorizontalScrollIndicator = false
+        imageTableView.isScrollEnabled = false
         imageTableView.separatorStyle = .none
-        imageTableView.allowsSelection = false
+        
         imageTableView.rowHeight = imgTableRowHeight
         imageTableView.snp.makeConstraints { (make) in
             make.top.equalTo(titleLbl.snp.bottom).offset(8)
@@ -84,24 +75,11 @@ extension PostCell {
     }
     
     private func setUpSaveButton(){
-        let saveButton = UIButton()
-        saveButton.backgroundColor = .clear
-        saveButton.setTitleColor(.black, for: .normal)
-        saveButton.adjustsImageWhenHighlighted = false
-        saveButton.contentHorizontalAlignment = .left
-        saveButton.setTitle("Сохранить", for: .normal)
-        
-        saveButton.addTarget(self, action: #selector(didButtonClick), for: .touchUpInside)
-        
-        contentView.addSubview(saveButton)
-        
         let halfOfContentMargin = contentMargin / 2
         
-        if let saveImage = UIImage(named: "save") {
-            saveButton.setImage(saveImage.withRenderingMode(.alwaysTemplate), for: .normal)
-            saveButton.imageView?.tintColor = .deepGreen
-            saveButton.alignTextAndImage(spacing: 8, leftOffset: halfOfContentMargin, rightOffset: halfOfContentMargin)
-        }
+        let saveButton = SaveButton(isSaved: false, offset: halfOfContentMargin)
+        saveButton.addTarget(self, action: #selector(didSaveButtonClick), for: .touchUpInside)
+        contentView.addSubview(saveButton)
         
         saveButton.snp.makeConstraints { (make) in
             make.left.equalToSuperview().offset(halfOfContentMargin)

@@ -11,9 +11,15 @@ import Kingfisher
 
 class PostImageCell: UITableViewCell {
     static let identifier = "PostImageCell"
+    
     weak var postImageView: UIImageView!
     weak var postBgImageView: UIImageView!
     weak var errorView: UIView!
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupViews()
+    }
     
     func configure(urlString: String) {
         if let url = URL(string: urlString) {
@@ -37,35 +43,43 @@ class PostImageCell: UITableViewCell {
         }
     }
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupViews()
+    func setupViews() {
+        setUpImages()
+        setUpErrorView()
     }
     
-    func setupViews() {
+    func setUpImages(){
         let postBgImageView = UIImageView()
         contentView.addSubview(postBgImageView)
         postBgImageView.contentMode = .scaleAspectFill
         postBgImageView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
+            make.height.equalTo(300)
         }
         postBgImageView.layer.masksToBounds = true
         postBgImageView.alpha = 0.7
         
         self.postBgImageView = postBgImageView
+        
         let postImageView = UIImageView()
         contentView.addSubview(postImageView)
         postImageView.contentMode = .scaleAspectFit
         
         postImageView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
+            make.height.equalTo(300)
         }
         self.postImageView = postImageView
-        
+    }
+    
+    func setUpErrorView(){
         let errorImage = UIImageView(image: #imageLiteral(resourceName: "broken_image"))
+        let errorText = "Не удалось\nзагрузить изображение"
+        
         errorImage.alpha = 0.6
+        errorImage.highlightedImage = nil
         let errorTitle = UILabel()
-        errorTitle.text = "Не удалось\nзагрузить изображение"
+        errorTitle.text = errorText
         errorTitle.numberOfLines = 2
         errorTitle.textAlignment = .center
         let errorView  = UIView()
@@ -78,8 +92,7 @@ class PostImageCell: UITableViewCell {
         
         errorView.snp.makeConstraints { (make) in
             make.height.equalTo(300)
-            make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview()
+            make.edges.equalToSuperview()
         }
         
         errorImage.snp.makeConstraints { (make) in
@@ -88,11 +101,11 @@ class PostImageCell: UITableViewCell {
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview().offset(-40)
         }
+        
         errorTitle.snp.makeConstraints { (make) in
             make.top.equalTo(errorImage.snp.bottom).offset(16)
             make.centerX.equalToSuperview()
         }
-        
         
         self.errorView = errorView
     }

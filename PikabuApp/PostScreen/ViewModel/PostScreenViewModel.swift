@@ -18,6 +18,10 @@ class PostScreenViewModel {
         self.post = Observable(post)
     }
     
+    func viewDidLoad(){
+        post.notifyObservers()
+    }
+    
     func switchPostSaveState(){
         postSaveStateDelegate.switchSaveState(for: post.value)
         post.value.isSaved = !post.value.isSaved

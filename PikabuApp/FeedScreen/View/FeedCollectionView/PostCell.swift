@@ -18,7 +18,7 @@ class PostCell: UICollectionViewCell {
     
     weak var titleLbl: UILabel!
     weak var bodyLbl: UILabel!
-    weak var saveButton: UIButton!
+    weak var saveButton: SaveButton!
     weak var imageTableView: UITableView!
     
     let contentMargin: CGFloat = 16
@@ -34,9 +34,7 @@ class PostCell: UICollectionViewCell {
         titleLbl.text = post.title
         bodyLbl.text = post.body ?? ""
         
-        let buttonTitle = post.isSaved ? "Убрать из сохраненного" : "Сохранить"
-        saveButton.setTitle(buttonTitle, for: .normal)
-        saveButton.imageView?.tintColor = post.isSaved ? .deepGreen : .gray
+        saveButton.setState(post.isSaved ? .saved : .unsaved)
         
         let shouldHaveTopOffset = post.body != nil && post.body != ""
         
@@ -54,7 +52,7 @@ class PostCell: UICollectionViewCell {
         }
     }
     
-    @objc func didButtonClick(_ sender: UIButton) {
+    @objc func didSaveButtonClick(_ sender: UIButton) {
         if let post = post, let postSaver = postSaver {
             postSaver.switchSaveState(for: post)
         }
@@ -79,6 +77,7 @@ extension PostCell: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostImageCell.identifier, for: indexPath) as? PostImageCell else { return UITableViewCell() }
+        cell.selectionStyle = .none
         
         if let images = post?.images {
             cell.configure(urlString: images[indexPath.row])

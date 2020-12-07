@@ -43,7 +43,7 @@ class NetworkingService {
         makeGetRequest(to: url, with: completion)
     }
     
-    func fetchPost(by id: String, completion: @escaping (PostDTO?, Error?) -> ()){
+    func fetchPost(by id: Int, completion: @escaping (PostDTO?, Error?) -> ()){
         let url = "https://pikabu.ru/page/interview/mobile-app/test-api/story.php?id=\(id)"
         makeGetRequest(to: url, with: completion)
     }
