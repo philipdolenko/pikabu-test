@@ -18,46 +18,6 @@ protocol PostCellDelegate: PostSaveStateDelegate {
 
 public class FeedViewModel: PostCellDelegate {
     
-    enum SectionType: Int, CaseIterable {
-        case feed
-        case savedFeed
-        
-        var title: String {
-            switch self {
-            case .feed:
-                return "Лента"
-            case .savedFeed:
-                return "Сохраненные"
-            }
-        }
-
-        var emptyContentMessege: String {
-            switch self {
-            case .feed:
-                if InternetConnectionManager.isConnectedToNetwork() {
-                    return ""
-                } else {
-                    return "Ошибка соединения."
-                }
-            case .savedFeed:
-                return "Нет сохраненных постов."
-            }
-        }
-        
-        var emptyContentImg: UIImage? {
-            switch self {
-            case .feed:
-                if InternetConnectionManager.isConnectedToNetwork() {
-                    return nil
-                } else {
-                    return #imageLiteral(resourceName: "cloud_off")
-                }
-            case .savedFeed:
-                return #imageLiteral(resourceName: "save_alt")
-            }
-        }
-    }
-    
     init(localStorageService: LocalStorageService, networkingService: NetworkingService) {
         self.localStorageService = localStorageService
         self.networkingService = networkingService
@@ -145,5 +105,47 @@ public class FeedViewModel: PostCellDelegate {
     
     func getSaveStatus(for post: Post) -> Bool {
         self.savedPosts.value.contains(where: {($0.id ==  post.id) && $0.isSaved})
+    }
+}
+
+extension FeedViewModel {
+    enum SectionType: Int, CaseIterable {
+        case feed
+        case savedFeed
+        
+        var title: String {
+            switch self {
+            case .feed:
+                return "Лента"
+            case .savedFeed:
+                return "Сохраненные"
+            }
+        }
+
+        var emptyContentMessege: String {
+            switch self {
+            case .feed:
+                if InternetConnectionManager.isConnectedToNetwork() {
+                    return ""
+                } else {
+                    return "Ошибка соединения."
+                }
+            case .savedFeed:
+                return "Нет сохраненных постов."
+            }
+        }
+        
+        var emptyContentImg: UIImage? {
+            switch self {
+            case .feed:
+                if InternetConnectionManager.isConnectedToNetwork() {
+                    return nil
+                } else {
+                    return #imageLiteral(resourceName: "cloud_off")
+                }
+            case .savedFeed:
+                return #imageLiteral(resourceName: "save_alt")
+            }
+        }
     }
 }
