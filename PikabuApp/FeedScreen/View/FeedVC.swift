@@ -134,7 +134,7 @@ extension FeedVC : TopBarListener  {
     }
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        let index = Int(targetContentOffset.pointee.x / view.frame.width)
+        let index = Int(targetContentOffset.pointee.x / scrollView.frame.width)
         topBar.selectItem(index)
     }
     
